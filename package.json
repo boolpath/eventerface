@@ -1,0 +1,7 @@
+{
+    "name": "events-router",
+    "version": "0.0.1",
+    "description": "Event-based distributed middleware with transparent support for EventEmitter and socket events.",
+    "main": "router.js",
+    "depedencies": {}
+}
