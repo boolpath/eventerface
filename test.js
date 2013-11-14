@@ -1,5 +1,5 @@
 // Mocha test
-var eventRouter = require('./router.js'),
+var module = require('./router.js'),
     assert = require('assert');
 
 /** Tests that the module returns a "route" method
@@ -8,22 +8,22 @@ var eventRouter = require('./router.js'),
 describe('event-router', function() {
 	describe('.bind', function() {
         it('should contain a "bind" property that is a function', function () {
-            assert.equal(typeof eventRouter.bind, 'function');
+            assert.equal(typeof module.bind, 'function');
         });
     });
     describe('.bind()', function() {
         it('should return an object', function () {
-            assert.equal(typeof eventRouter.bind(), 'object');
+            assert.equal(typeof module.bind(), 'object');
         });
     });
     describe('.bind().emit', function() {
         it('should return an "emit" property that is a function', function () {
-            assert.equal(typeof eventRouter.bind().emit, 'function');
+            assert.equal(typeof module.bind().emit, 'function');
         });
     });
     describe('.bind().on', function() {
         it('should return an "on" property that is a function', function () {
-            assert.equal(typeof eventRouter.bind().on, 'function');
+            assert.equal(typeof module.bind().on, 'function');
         });
     });
 });
