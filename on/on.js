@@ -1,11 +1,34 @@
-module.exports = {
-    attachTo: attachTo
+/* NODE MODULES */
+
+/** LOCAL OBJECT 
+ * @property {} - 
+ */
+var ON = {
+	
 };
 
+/** MODULE INTERFACE 
+ * @method {function} - 
+ */
+module.exports = {
+    bind: bind
+};
+
+/*----------------------------------------------------------------------------*/
+
 /** Attaches a custom .on() handler to the emitter
- * @param {object} emitter - The emitter to which the .on() handler will be attached
+ * @param {object} emitter - The emitter to which a custom .on() handler will be attached
+ * @param {string} map - The namespace where the event mapping is to be done
  * @returns {boolean} - True if the handler could be attached
  */
-function attachTo(emitter) {
+function bind(emitter, map) {
+	if(typeof emitter.on !== 'function') return false;
+    emitter.own_on = emitter.on;
+
+    emitter.on = function(event, message, inbound) {
+        if(!inbound) { map.on(event, message, emitter); }
+        emitter.own_on.apply(emitter, [].slice.apply(arguments));
+    }
+
     return true;
 }
