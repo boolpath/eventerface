@@ -1,34 +1,14 @@
+var factory = require('./factory');
+
 module.exports = {
-    publish: publish,
-    unpublish: unpublish,
-    subscribe: subscribe,
-    unscribe: unscribe
+    bind: bind
 };
 
-/*
-*
-*/
-function publish() {
-
-}
-
-/*
-*
-*/
-function unpublish() {
-	
-}
-
-/*
-*
-*/
-function subscribe() {
-	
-}
-
-/*
-*
-*/
-function unscribe() {
-	
+/** Binds the events of an emitter object to the parties of interest
+ * @param {object} emitter - The object whose events are to be routed
+ * @returns {object} boundEmitter - A new event emitter with the proper binding
+ */
+function bind(emitter) {
+    var boundEmitter = factory.createEmitter(emitter);
+    return boundEmitter;
 }

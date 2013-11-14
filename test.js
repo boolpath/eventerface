@@ -2,28 +2,28 @@
 var eventRouter = require('./router.js'),
     assert = require('assert');
 
-/*
-*
-*/
+/** Tests that the module returns a "route" method
+ *
+ */
 describe('event-router', function() {
-    describe('.publish', function() {
-        it('should return a "publish" property that is a function', function () {
-            assert.equal(typeof eventRouter.publish, 'function');
+	describe('.bind', function() {
+        it('should contain a "bind" property that is a function', function () {
+            assert.equal(typeof eventRouter.bind, 'function');
         });
     });
-    describe('.unpublish', function() {
-        it('should return a "unpublish" property that is a function', function () {
-            assert.equal(typeof eventRouter.unpublish, 'function');
+    describe('.bind()', function() {
+        it('should return an object', function () {
+            assert.equal(typeof eventRouter.bind(), 'object');
         });
     });
-    describe('.subscribe', function() {
-        it('should return a "subscribe" property that is a function', function () {
-            assert.equal(typeof eventRouter.subscribe, 'function');
+    describe('.bind().emit', function() {
+        it('should return an "emit" property that is a function', function () {
+            assert.equal(typeof eventRouter.bind().emit, 'function');
         });
     });
-    describe('.unscribe', function() {
-        it('should return a "unscribe" property that is a function', function () {
-            assert.equal(typeof eventRouter.unscribe, 'function');
+    describe('.bind().on', function() {
+        it('should return an "on" property that is a function', function () {
+            assert.equal(typeof eventRouter.bind().on, 'function');
         });
     });
 });
