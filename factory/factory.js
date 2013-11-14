@@ -35,8 +35,8 @@ function createEmitter(emitter, namespace) {
     }
     eventMap = FACTORY.maps[thisNamespace];
 
-    emit.attachTo(newEmitter, eventMap);
-    on.attachTo(newEmitter, eventMap);
+    emit.bind(newEmitter, eventMap);
+    on.bind(newEmitter, eventMap);
 
     var newEmitter = {
     	emit: tempEmitter.emit,
