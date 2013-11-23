@@ -1,24 +1,23 @@
-#event-router
+#eventerface
 
-Event-based distributed middleware with transparent support for EventEmitter and socket events.
-
+Create distributed, loosely coupled architectures by managing everything through events.
 
 #Examples
 
 
-All examples below require the 'event-router' module:
+All examples below require the 'eventerface' module:
 
 ``` js
-var eventRouter = require('event-router');
+var eventerface = require('eventerface');
 ```
 
 
 ## One emitter, same listener
 
-The following code does not print "Hey!" as is might be expected. That is because 'event-router' emitters do not listen to their own events:
+The following code does not print "Hey!" as is might be expected. That is because 'eventerface' emitters do not listen to their own events:
 
 ``` js
-var emitter = eventRouter.bind();
+var emitter = eventerface.bind();
 
 emitter.on('hey', function() {
     console.log('Hey!');            // Does not log
@@ -30,11 +29,11 @@ emitter.emit('hey');
 
 ## One emitter, different listener
 
-The proper way to use 'event-router' emitters is to listen to events, not to particular event emitters:
+The proper way to use 'eventerface' emitters is to listen to events, not to particular event emitters:
 
 ``` js
-var emitter = eventRouter.bind();
-var listener = eventRouter.bind();
+var emitter = eventerface.bind();
+var listener = eventerface.bind();
 
 listener.on('hey', function () {
     console.log('"hey" event fired listener!');
@@ -51,9 +50,9 @@ In the previous code, 'listener' knows nothing about 'emitter', only about the '
 Since a listener only knows about events and not where they come from, they can listen to the same event even when its emitted by different emitters:
 
 ``` js
-var emitter1 = eventRouter.bind();
-var emitter2 = eventRouter.bind();
-var listener = eventRouter.bind();
+var emitter1 = eventerface.bind();
+var emitter2 = eventerface.bind();
+var listener = eventerface.bind();
 
 listener.on('hey', function () {
     console.log('"hey" event fired listener!');     // Prints twice
@@ -68,11 +67,11 @@ emitter2.emit('hey');
 Likewise, since an emitter does not know who is going to listen to its events, many listeners can listen to the same event:
 
 ``` js
-var emitter = eventRouter.bind();
+var emitter = eventerface.bind();
 
-var listener1 = eventRouter.bind();
-var listener2 = eventRouter.bind();
-var listener3 = eventRouter.bind();
+var listener1 = eventerface.bind();
+var listener2 = eventerface.bind();
+var listener3 = eventerface.bind();
 
 listener1.on('hey', function () {
     console.log('"Hey" event fired listener #1!');
@@ -99,12 +98,12 @@ The output of the previous code should be:
 Now, combining the two previous examples, it is also possible to have a set of listeners listening to a particular event that is emitted by different emitters:
 
 ``` js
-var emitter1 = eventRouter.bind();
-var emitter2 = eventRouter.bind();
+var emitter1 = eventerface.bind();
+var emitter2 = eventerface.bind();
 
-var listener1 = eventRouter.bind();
-var listener2 = eventRouter.bind();
-var listener3 = eventRouter.bind();
+var listener1 = eventerface.bind();
+var listener2 = eventerface.bind();
+var listener3 = eventerface.bind();
 
 listener1.on('hey', function (){
     console.log('"hey" event fired listener #1!');
