@@ -1,7 +1,7 @@
 {
-    "name": "events-router",
+    "name": "eventerface",
     "version": "0.0.1",
-    "description": "Event-based distributed middleware with transparent support for EventEmitter and socket events.",
-    "main": "router.js",
+    "description": "Create distributed, loosely coupled architectures by managing everything through event-based interfaces.",
+    "main": "eventerface.js",
     "depedencies": {}
 }

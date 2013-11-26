@@ -1,6 +1,6 @@
 #eventerface
 
-Create distributed, loosely coupled architectures by managing everything through events.
+Create distributed, loosely coupled architectures by managing everything through event-based interfaces.
 
 #Examples
 
