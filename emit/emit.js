@@ -22,12 +22,13 @@ module.exports = {
  * @returns {boolean} - True if the method could be attached
  */
 function bind(emitter, map) {
-    if(typeof emitter.emit !== 'function') return false;
+    if (typeof emitter.emit !== 'function') {
+        return false;
+    }
     emitter.own_emit = emitter.emit;
 
-    emitter.emit = function(event, message, inbound) {
-        if(!inbound) { map.emit(event, message, emitter); }
-        emitter.own_emit.apply(emitter, [].slice.apply(arguments));
+    emitter.emit = function(eventName, message) { 
+        map.emit(eventName, message, emitter); 
     }
 
     return true;

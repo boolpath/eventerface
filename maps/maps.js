@@ -66,7 +66,7 @@ function localMap(name) {
             eventListeners.forEach(function(listener) {
                 if (typeof listener === 'object' && eventEmitter !== listener &&
                     typeof listener.emit === 'function') {
-                    listener.own_emit(eventName, message, true);
+                    listener.own_emit(eventName, message);
                 }
             });     
         }
