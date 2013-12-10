@@ -9,6 +9,8 @@ var ROUTER = {
 }; 
 
 /** MODULE INTERFACE 
+ * @method {function} create - Creates a new evented interface, either as a routing channel or a RESTful API
+ * @method {function} find - Finds an existing evented interface, either locally or remotely
  * @method {function} bind - Binds the events of an emitter object to the parties of interest
  */
 module.exports = {
@@ -16,6 +18,22 @@ module.exports = {
 };
 
 /*----------------------------------------------------------------------------*/
+
+/** Creates a new evented interface, either as a routing channel or a RESTful API
+ * @param
+ * @returns
+ */
+function create() {
+    
+}
+
+/** Finds an existing evented interface, either locally or remotely
+ * @param
+ * @returns
+ */
+function find() {
+    
+}
 
 /** Binds the events of an emitter object to the parties of interest in a particular namespace
  * @param {object} emitter - The object whose events are to be bound
