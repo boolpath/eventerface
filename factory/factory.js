@@ -11,7 +11,6 @@ var eventEmitter = require('events').EventEmitter,
 var FACTORY = {
 	maps: {}
 }; 
-FACTORY.maps['default'] = createMap();
 
 /** MODULE INTERFACE 
  * @method {function} - 
@@ -29,53 +28,29 @@ module.exports = {
  */
 function createInterface(mapping) {
     var newEventerface = {
-        bind: bind
+        emitter: function () {
+            return createEmitter(mapping);
+        }
     };
-
-
 
     return newEventerface;
 }
 
 /** Creates a new event emitter object by attaching custom handlers and methods
- * @param {object} emitter - The base event emitter to be customized
- * @param {string} namespace - The namespace where the event mapping is to be done
- * @returns {object} newEmitter - The new event emitter object
+ * @param {string} mapping - The event mapping system to be used
+ * @returns {object} mappedEmitter - The new, mapped event emitter object
  */
-function createEmitter(emitter, namespace) {
-	var tempEmitter = emitter || new eventEmitter(), eventMap,
-        thisNamespace = (typeof namespace === 'string') ? namespace : 'default';
-        
-    if(!FACTORY.maps[thisNamespace]) {
-    	createMap(thisNamespace);
-    }
-    eventMap = FACTORY.maps[thisNamespace];
+function createEmitter(mapping) {
+	var tempEmitter = new eventEmitter(),
+        mappedEmitter;
+    
+    emit.bind(tempEmitter, mapping);
+    on.bind(tempEmitter, mapping);
 
-    emit.bind(tempEmitter, eventMap);
-    on.bind(tempEmitter, eventMap);
-
-    var newEmitter = {
+    mappedEmitter = {
     	emit: tempEmitter.emit,
     	on: tempEmitter.on
     };
-    return newEmitter;
-}
 
-/** Creates a new mapping of events and event listeners
- * @param {string} namespace - The name of the new map namespace. 
- * @returns {object}
- * @property {object} trees - An array for storing non-directed events
- * @property {object} routes - An array for storing directed events
- */
-function createMap(namespace) {
-	var mapName = namespace || 'default';
-	if(typeof mapName !== 'string') {
-		throw {name: 'NamespaceError', message: 'Parameter "namespace" must be a string.'};
-	}
-	else if(FACTORY && typeof FACTORY.maps[mapName] !== 'undefined') { 
-		throw {name: 'NamespaceError', message: 'Namespace map '+mapName+' already exists.'};
-	}
-
-    FACTORY.maps[mapName] = map.create();
-    return FACTORY.maps[mapName];
+    return mappedEmitter;
 }
