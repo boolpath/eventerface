@@ -1,7 +1,7 @@
-var eventRouter = require('../router.js');
+var eventerface = require('../eventerface.js').create();
 
 
-var emitter = eventRouter.bind();
+var emitter = eventerface.emitter();
 
 emitter.on('hey', function() {
     console.log('Hey!');
