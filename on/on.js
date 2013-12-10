@@ -22,11 +22,13 @@ module.exports = {
  * @returns {boolean} - True if the handler could be attached
  */
 function bind(emitter, map) {
-	if(typeof emitter.on !== 'function') return false;
+	if (typeof emitter.on !== 'function') {
+        return false;
+    }
     emitter.own_on = emitter.on;
 
-    emitter.on = function(event, message, inbound) {
-        if(!inbound) { map.on(event, message, emitter); }
+    emitter.on = function(eventName, message) {
+        map.on(eventName, message, emitter); 
         emitter.own_on.apply(emitter, [].slice.apply(arguments));
     }
 
