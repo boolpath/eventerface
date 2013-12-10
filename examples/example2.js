@@ -1,3 +1,4 @@
+// ONE EMITTER, DIFFERENT LISTENER
 var eventerface = require('../eventerface.js').create();
 
 var emitter = eventerface.emitter();

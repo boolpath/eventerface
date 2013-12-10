@@ -1,11 +1,12 @@
-var eventRouter = require('../router.js');
+// ONE EMITTER, MANY LISTENERS
+var eventerface = require('../eventerface.js').create();
 
 
-var emitter = eventRouter.bind();
+var emitter = eventerface.emitter();
 
-var listener1 = eventRouter.bind();
-var listener2 = eventRouter.bind();
-var listener3 = eventRouter.bind();
+var listener1 = eventerface.emitter();
+var listener2 = eventerface.emitter();
+var listener3 = eventerface.emitter();
 
 listener1.on('hey', function () {
     console.log('"hey" event fired listener #1!');

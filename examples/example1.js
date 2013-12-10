@@ -1,9 +1,9 @@
+// ONE EMITTER, SAME LISTENER
 var eventerface = require('../eventerface.js').create();
-
 
 var emitter = eventerface.emitter();
 
-emitter.on('hey', function() {
+emitter.on('hey', function () {
     console.log('Hey!');
 });
 

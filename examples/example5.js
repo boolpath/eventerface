@@ -1,12 +1,13 @@
-var eventRouter = require('../router.js');
+// MANY EMITTERS, MANY LISTENERS
+var eventerface = require('../eventerface.js').create();
 
 
-var emitter1 = eventRouter.bind();
-var emitter2 = eventRouter.bind();
+var emitter1 = eventerface.emitter();
+var emitter2 = eventerface.emitter();
 
-var listener1 = eventRouter.bind();
-var listener2 = eventRouter.bind();
-var listener3 = eventRouter.bind();
+var listener1 = eventerface.emitter();
+var listener2 = eventerface.emitter();
+var listener3 = eventerface.emitter();
 
 
 listener1.on('hey', function (){
@@ -21,7 +22,7 @@ listener3.on('hey', function (){
 
 emitter1.emit('hey');
 
-setTimeout(function() { 
+setTimeout(function () { 
     emitter2.emit('hey');
 }, 1000);
 
