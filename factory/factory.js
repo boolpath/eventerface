@@ -17,7 +17,7 @@ FACTORY.maps['default'] = createMap();
  * @method {function} - 
  */
 module.exports = {
-    create: create,
+    createInterface: createInterface,
     createEmitter: createEmitter
 }
 
@@ -27,22 +27,12 @@ module.exports = {
  * @param
  * @returns
  */
-function create(options) {
-    var newEventerface = {},
-        namespace = options.namespace || 'eventerface';
+function createInterface(mapping) {
+    var newEventerface = {
+        bind: bind
+    };
 
-    switch (options.type) {
-    case 'router':
-        if (options.reach === 'local') {
-            unixSocket.create(namespace);
-            newEventerface.bind = function (emitter) {
-                return unixSocket.bind(namespace, emitter);
-            }
-        }
-        break;
-    default:
-        break;
-    }
+
 
     return newEventerface;
 }
