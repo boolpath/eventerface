@@ -2,7 +2,8 @@
 var eventEmitter = require('events').EventEmitter,
     emit = require('../emit'),
     on = require('../on'),
-	map = require('../events-map');
+	map = require('../events-map'),
+    unixSocket = require('./unixSocket');
 
 /** LOCAL OBJECT
  * @property {object} maps - The set of event mapping namespaces
@@ -16,10 +17,35 @@ FACTORY.maps['default'] = createMap();
  * @method {function} - 
  */
 module.exports = {
+    create: create,
     createEmitter: createEmitter
 }
 
 /*----------------------------------------------------------------------------*/
+
+/** 
+ * @param
+ * @returns
+ */
+function create(options) {
+    var newEventerface = {},
+        namespace = options.namespace || 'eventerface';
+
+    switch (options.type) {
+    case 'router':
+        if (options.reach === 'local') {
+            unixSocket.create(namespace);
+            newEventerface.bind = function (emitter) {
+                return unixSocket.bind(namespace, emitter);
+            }
+        }
+        break;
+    default:
+        break;
+    }
+
+    return newEventerface;
+}
 
 /** Creates a new event emitter object by attaching custom handlers and methods
  * @param {object} emitter - The base event emitter to be customized
@@ -35,8 +61,8 @@ function createEmitter(emitter, namespace) {
     }
     eventMap = FACTORY.maps[thisNamespace];
 
-    emit.bind(newEmitter, eventMap);
-    on.bind(newEmitter, eventMap);
+    emit.bind(tempEmitter, eventMap);
+    on.bind(tempEmitter, eventMap);
 
     var newEmitter = {
     	emit: tempEmitter.emit,
