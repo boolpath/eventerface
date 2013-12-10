@@ -1,6 +1,6 @@
 #eventerface
 
-Create distributed, loosely coupled architectures by managing everything through event-based interfaces.
+Evented API development framework for creating distributed, loosely coupled architectures.
 
 #Examples
 
@@ -8,7 +8,7 @@ Create distributed, loosely coupled architectures by managing everything through
 All examples below require the 'eventerface' module:
 
 ``` js
-var eventerface = require('eventerface');
+var eventerface = require('eventerface').create();
 ```
 
 
@@ -17,7 +17,7 @@ var eventerface = require('eventerface');
 The following code does not print "Hey!" as is might be expected. That is because 'eventerface' emitters do not listen to their own events:
 
 ``` js
-var emitter = eventerface.bind();
+var emitter = eventerface.emitter();
 
 emitter.on('hey', function() {
     console.log('Hey!');            // Does not log
@@ -32,8 +32,8 @@ emitter.emit('hey');
 The proper way to use 'eventerface' emitters is to listen to events, not to particular event emitters:
 
 ``` js
-var emitter = eventerface.bind();
-var listener = eventerface.bind();
+var emitter = eventerface.emitter();
+var listener = eventerface.emitter();
 
 listener.on('hey', function () {
     console.log('"hey" event fired listener!');
@@ -50,9 +50,9 @@ In the previous code, 'listener' knows nothing about 'emitter', only about the '
 Since a listener only knows about events and not where they come from, they can listen to the same event even when its emitted by different emitters:
 
 ``` js
-var emitter1 = eventerface.bind();
-var emitter2 = eventerface.bind();
-var listener = eventerface.bind();
+var emitter1 = eventerface.emitter();
+var emitter2 = eventerface.emitter();
+var listener = eventerface.emitter();
 
 listener.on('hey', function () {
     console.log('"hey" event fired listener!');     // Prints twice
@@ -67,11 +67,11 @@ emitter2.emit('hey');
 Likewise, since an emitter does not know who is going to listen to its events, many listeners can listen to the same event:
 
 ``` js
-var emitter = eventerface.bind();
+var emitter = eventerface.emitter();
 
-var listener1 = eventerface.bind();
-var listener2 = eventerface.bind();
-var listener3 = eventerface.bind();
+var listener1 = eventerface.emitter();
+var listener2 = eventerface.emitter();
+var listener3 = eventerface.emitter();
 
 listener1.on('hey', function () {
     console.log('"Hey" event fired listener #1!');
@@ -98,12 +98,12 @@ The output of the previous code should be:
 Now, combining the two previous examples, it is also possible to have a set of listeners listening to a particular event that is emitted by different emitters:
 
 ``` js
-var emitter1 = eventerface.bind();
-var emitter2 = eventerface.bind();
+var emitter1 = eventerface.emitter();
+var emitter2 = eventerface.emitter();
 
-var listener1 = eventerface.bind();
-var listener2 = eventerface.bind();
-var listener3 = eventerface.bind();
+var listener1 = eventerface.emitter();
+var listener2 = eventerface.emitter();
+var listener3 = eventerface.emitter();
 
 listener1.on('hey', function (){
     console.log('"hey" event fired listener #1!');
