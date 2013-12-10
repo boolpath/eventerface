@@ -4,8 +4,9 @@
  * @property {object} factory - A module for creating objects
  * @property {object} map - A module for adding an retrieving event bindings
  */
-var ROUTER = {
-	factory: require('./factory')
+var EVENTERFACE = {
+	factory: require('./factory'),
+    maps: require('./maps')
 }; 
 
 /** MODULE INTERFACE 
@@ -14,17 +15,35 @@ var ROUTER = {
  * @method {function} bind - Binds the events of an emitter object to the parties of interest
  */
 module.exports = {
-    bind: bind
+    create: create,
+    find: find
 };
 
 /*----------------------------------------------------------------------------*/
 
 /** Creates a new evented interface, either as a routing channel or a RESTful API
- * @param
+ * @param {object} options - Describes the features of the interface
  * @returns
  */
-function create() {
-    
+function create(options) {
+    var newEventerface, mapping;
+
+    switch (typeof options) {
+    case 'undefined':
+        mapping = EVENTERFACE.maps.create({ reach: 'local' });
+        newEventerface = EVENTERFACE.factory.createInterface(mapping);
+        break;
+    case 'string':
+        
+        break;
+    case 'object':
+        
+        break;
+    default:
+        break;
+    }
+
+    return newEventerface;
 }
 
 /** Finds an existing evented interface, either locally or remotely
@@ -33,14 +52,4 @@ function create() {
  */
 function find() {
     
-}
-
-/** Binds the events of an emitter object to the parties of interest in a particular namespace
- * @param {object} emitter - The object whose events are to be bound
- * @param {string} namespace - The namespace where the event mapping is to be done
- * @returns {object} boundEmitter - A new event emitter with the proper binding
- */
-function bind(emitter, namespace) {
-    var boundEmitter = ROUTER.factory.createEmitter(emitter, namespace);
-    return boundEmitter;
 }
