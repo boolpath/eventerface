@@ -31,10 +31,20 @@ function create(options) {
         }
         break;
     case 'global':
-        
+        if (type === 'namespace') {
+
+        } else if (type === 'channel') {
+
+        }
         break;
     case 'distributed':
-        
+        if (type === 'channel') {
+
+        } else if (type === 'station') {
+
+        } else if (type === 'api') {
+
+        }
         break;
     default:
         break;
