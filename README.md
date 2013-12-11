@@ -19,7 +19,7 @@ The following code does not print "Hey!" as is might be expected. That is becaus
 ``` js
 var emitter = eventerface.emitter();
 
-emitter.on('hey', function() {
+emitter.on('hey', function () {
     console.log('Hey!');            // Does not log
 });
 
@@ -105,19 +105,19 @@ var listener1 = eventerface.emitter();
 var listener2 = eventerface.emitter();
 var listener3 = eventerface.emitter();
 
-listener1.on('hey', function (){
+listener1.on('hey', function () {
     console.log('"hey" event fired listener #1!');
 });
-listener2.on('hey', function (){
+listener2.on('hey', function () {
     console.log('"hey" event fired listener #2!');
 });
-listener3.on('hey', function (){
+listener3.on('hey', function () {
     console.log('"hey" event fired listener #3!');
 });
 
 emitter1.emit('hey');
 
-setTimeout(function() { 
+setTimeout(function () { 
     emitter2.emit('hey');
 }, 1000);
 ```

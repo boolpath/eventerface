@@ -10,13 +10,13 @@ var listener2 = eventerface.emitter();
 var listener3 = eventerface.emitter();
 
 
-listener1.on('hey', function (){
+listener1.on('hey', function () {
     console.log('"hey" event fired listener #1!');
 });
-listener2.on('hey', function (){
+listener2.on('hey', function () {
     console.log('"hey" event fired listener #2!');
 });
-listener3.on('hey', function (){
+listener3.on('hey', function () {
     console.log('"hey" event fired listener #3!');
 });
 
