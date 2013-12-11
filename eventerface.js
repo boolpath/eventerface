@@ -30,7 +30,7 @@ function create(options) {
 
     switch (typeof options) {
     case 'undefined':
-        mapping = EVENTERFACE.maps.create({ reach: 'local' });
+        mapping = EVENTERFACE.maps.create({ scope: 'local', type: 'namespace' });
         newEventerface = EVENTERFACE.factory.createInterface(mapping);
         break;
     case 'string':

@@ -21,11 +21,20 @@ module.exports = {
  * @returns {object} map - The created map
  */
 function create(options) {
-    var map;
+    var type = options.type,
+        map;
 
-    switch (options.reach) {
+    switch (options.scope) {
     case 'local':
-        map = localMap(options.name);
+        if (type === 'namespace') {
+            map = localNamespace(options.name);
+        }
+        break;
+    case 'global':
+        
+        break;
+    case 'distributed':
+        
         break;
     default:
         break;
@@ -38,9 +47,9 @@ function create(options) {
  * @param {string} name - The name of the map
  * @returns {object} map - The local map created
  */
-function localMap(name) {
+function localNamespace(name) {
     var map = {
-        name: name || 'localMap',
+        name: name || 'localNamespace',
         events: {},     // A set of the emitted events
         trees: {}       // A set of arrays of listeners of events
     };
