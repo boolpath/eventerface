@@ -2,7 +2,6 @@
 var eventEmitter = require('events').EventEmitter,
     emit = require('../emit'),
     on = require('../on'),
-	map = require('../events-map'),
     unixSocket = require('./unixSocket');
 
 /** LOCAL OBJECT
