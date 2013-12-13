@@ -1,4 +1,5 @@
-var net = require('net'),
+var tcpEventEmitter = require('../../utils/tcpEventEmitter'),
+    net = require('net'),
     fs = require('fs'),
     basepath = __dirname + '/../../sockets/';
 
@@ -20,8 +21,8 @@ module.exports = function (name) {
     } 
 
     // Create a UNIX socket server
-    net.createServer(function (socket) {
-        
+    net.createServer(function (unixSocket) {
+        var socket = tcpEventEmitter.bind(unixSocket);
     }).listen(path, function () {
         console.log('Unix socket created: ' + name + '.sock');
     });
