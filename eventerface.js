@@ -26,15 +26,25 @@ module.exports = {
  * @returns
  */
 function create(options) {
-    var newEventerface, mapping;
+    var newEventerface, 
+        mapping,
+        mappingOptions;
 
     switch (typeof options) {
     case 'undefined':
-        mapping = EVENTERFACE.maps.create({ scope: 'local', type: 'namespace' });
-        newEventerface = EVENTERFACE.factory.createInterface(mapping);
+        mappingOptions = { 
+            scope: 'local', 
+            type: 'namespace'
+        };
         break;
     case 'string':
-        
+        if (options.indexOf('/') === -1) {
+            mappingOptions = { 
+                name: options.name,
+                scope: 'local', 
+                type: 'namespace'
+            };
+        } 
         break;
     case 'object':
         
@@ -42,6 +52,9 @@ function create(options) {
     default:
         break;
     }
+
+    mapping = EVENTERFACE.maps.create(mappingOptions);
+    newEventerface = EVENTERFACE.factory.createInterface(mapping);
 
     return newEventerface;
 }
