@@ -32,7 +32,7 @@ function create(options) {
         break;
     case 'global':
         if (type === 'namespace') {
-
+            map = globalNamespace(options.name);
         } else if (type === 'channel') {
 
         }
@@ -98,6 +98,30 @@ function localNamespace(name) {
         }
         map.trees[eventName].push(listener);
     }
+
+    return map;
+}
+
+/** Creates a simple global mapper that routes every event to its listeners
+ * @param {string} name - The name of the map
+ * @returns {object} map - The global map created
+ */
+function globalNamespace(name) {
+    var map = {
+        name: name || 'globalNamespace',
+        events: {},     // A set of the emitted events
+        trees: {}       // A set of arrays of listeners of events
+    };
+
+    // Map emitted events to all listeners by emitting the event on each of them
+    map.emit = function () {
+
+    };
+
+    // Register a listener to a particular event
+    map.on = function () {
+
+    };
 
     return map;
 }
