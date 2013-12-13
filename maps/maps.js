@@ -14,14 +14,16 @@ var MAPS = {
         global: {
             namespace: require('./namespace/global.js')
         }
-    }
+    },
+    find: require('./find.js')
 };
 
 /** MODULE INTERFACE
  *@method {function} - 
  */
 module.exports = {
-    create: create  
+    create: create,
+    find: find 
 };
 
 /*----------------------------------------------------------------------------*/
@@ -61,4 +63,38 @@ function create(options) {
     }
 
     return map;
+}
+
+/** Finds the mapping context of an evented interface, either locally or remotely
+ * @param {object} options - Information needed to find the interface mapping
+ * @returns
+ */
+function find(options, onFound) {
+    var type = options.type;
+
+    switch (options.scope) {
+    case 'local':
+        if (type === 'namespace') {
+            
+        }
+        break;
+    case 'global':
+        if (type === 'namespace') {
+            MAPS.find.globalNamespace(options.name, onFound);
+        } else if (type === 'channel') {
+
+        }
+        break;
+    case 'distributed':
+        if (type === 'channel') {
+
+        } else if (type === 'station') {
+
+        } else if (type === 'api') {
+
+        }
+        break;
+    default:
+        break;
+    }
 }
