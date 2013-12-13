@@ -40,11 +40,19 @@ function create(options) {
     case 'string':
         if (options.indexOf('/') === -1) {
             mappingOptions = { 
-                name: options.name,
+                name: options,
                 scope: 'local', 
                 type: 'namespace'
             };
-        } 
+        } else if (options.indexOf('/') === 0) {
+            if (options.lastIndexOf('/') === 0) {
+                mappingOptions = {
+                    name: options.split('/')[1],
+                    scope: 'global',
+                    type: 'namespace'
+                };
+            }
+        }
         break;
     case 'object':
         
@@ -52,6 +60,10 @@ function create(options) {
     default:
         break;
     }
+
+    console.log('Creating ' + mappingOptions.scope 
+                + ' ' + mappingOptions.type 
+                + ' "' + (mappingOptions.name || '') + '"');
 
     mapping = EVENTERFACE.maps.create(mappingOptions);
     newEventerface = EVENTERFACE.factory.createInterface(mapping);
