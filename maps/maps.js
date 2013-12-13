@@ -1,10 +1,13 @@
 /* NODE MODULES */
+var net = require('net'),
+    fs = require('fs');
 
 /** LOCAL OBJECT 
  * @property {} - 
  */
 var MAPS = {
-    local: []
+    local: [],
+    basepath: __dirname + '/../sockets/'
 };
 
 /** MODULE INTERFACE
@@ -112,6 +115,19 @@ function globalNamespace(name) {
         events: {},     // A set of the emitted events
         trees: {}       // A set of arrays of listeners of events
     };
+    var path = MAPS.basepath + name + '.sock';
+
+    //
+    if (fs.existsSync(path)) {
+        fs.unlinkSync(path);
+    } 
+
+    // 
+    net.createServer(function (socket) {
+        
+    }).listen(path, function () {
+        console.log('Unix socket created: ' + name + '.sock');
+    });
 
     // Map emitted events to all listeners by emitting the event on each of them
     map.emit = function () {
