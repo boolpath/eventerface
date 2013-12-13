@@ -59,6 +59,6 @@ TcpEventEmitter.prototype.send = function (event, content, callback) {
 }
 
 /* EXPORTS */
-module.exports.bind = function (socket) {
+module.exports = function (socket) {
 	return new TcpEventEmitter(socket);
 }
