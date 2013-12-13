@@ -7,11 +7,12 @@ var net = require('net'),
  */
 var MAPS = {
     local: [],
-    basepath: __dirname + '/../sockets/',
     create: {
-        namespace: {
-            local: require('./namespace/local.js'),
-            global: require('./namespace/global.js')
+        local: {
+            namespace: require('./namespace/local.js')
+        },
+        global: {
+            namespace: require('./namespace/global.js')
         }
     }
 };
@@ -36,12 +37,12 @@ function create(options) {
     switch (options.scope) {
     case 'local':
         if (type === 'namespace') {
-            map = MAPS.create.namespace.local(options.name);
+            map = MAPS.create.local.namespace(options.name);
         }
         break;
     case 'global':
         if (type === 'namespace') {
-            map = globalNamespace(options.name);
+            map = MAPS.create.global.namespace(options.name);
         } else if (type === 'channel') {
 
         }
@@ -58,43 +59,6 @@ function create(options) {
     default:
         break;
     }
-
-    return map;
-}
-
-/** Creates a simple global mapper that routes every event to its listeners
- * @param {string} name - The name of the map
- * @returns {object} map - The global map created
- */
-function globalNamespace(name) {
-    var map = {
-        name: name || 'globalNamespace',
-        events: {},     // A set of the emitted events
-        trees: {}       // A set of arrays of listeners of events
-    };
-    var path = MAPS.basepath + name + '.sock';
-
-    // Check if a UNIX socket has been created previously and unlink it
-    if (fs.existsSync(path)) {
-        fs.unlinkSync(path);
-    } 
-
-    // Create a UNIX socket server
-    net.createServer(function (socket) {
-        
-    }).listen(path, function () {
-        console.log('Unix socket created: ' + name + '.sock');
-    });
-
-    // Map emitted events to all listeners by emitting the event on each of them
-    map.emit = function () {
-
-    };
-
-    // Register a listener to a particular event
-    map.on = function () {
-
-    };
 
     return map;
 }
