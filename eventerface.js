@@ -72,9 +72,38 @@ function create(options) {
 }
 
 /** Finds an existing evented interface, either locally or remotely
- * @param
+ * @param {object} options - Information needed to find the interface
  * @returns
  */
-function find() {
-    
+function find(options, onFound) {
+    var theEventerface,
+        map;
+
+    switch (typeof options) {
+    case 'undefined':
+        
+        break;
+    case 'string':
+        if (options.indexOf('/') === -1) {
+            
+        } else if (options.indexOf('/') === 0) {
+            if (options.lastIndexOf('/') === 0) {
+                map = {
+                    name: options.split('/')[1],
+                    scope: 'global',
+                    type: 'namespace' 
+                };
+            }
+        }
+        break;
+    case 'object':
+        
+        break;
+    default:
+        break;
+    }
+
+    EVENTERFACE.maps.find(map, function (theMap) {
+
+    });
 }
