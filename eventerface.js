@@ -103,7 +103,5 @@ function find(options, onFound) {
         break;
     }
 
-    EVENTERFACE.maps.find(map, function (theMap) {
-
-    });
+    EVENTERFACE.maps.find(map, onFound);
 }

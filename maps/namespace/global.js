@@ -23,6 +23,7 @@ module.exports = function (name) {
     // Create a UNIX socket server
     net.createServer(function (unixSocket) {
         var socket = tcpEventify(unixSocket);
+        socket.send('welcome');
     }).listen(path, function () {
         console.log('Unix socket created: ' + name + '.sock');
     });
