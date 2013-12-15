@@ -46,7 +46,15 @@ function connectToNamespace(name, found, maxAttempts, retryTimeout) {
     if (!FIND.found[name]) {
         (function connect() {
             socket = net.connect(FIND.basepath + name + '.sock', function () {
-                theEventerface = tcpEventify(socket);
+                var eventedSocket = tcpEventify(socket);
+                theEventerface = {
+                    emit: function (eventName, message) {
+                        eventedSocket.send(eventName, message);
+                    },
+                    on: function (eventName, listener) {
+                        eventedSocket.on(eventName, listener);
+                    }
+                };
                 FIND.found[name] = theEventerface;
                 found(theEventerface);
             });
