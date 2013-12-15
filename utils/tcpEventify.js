@@ -21,6 +21,10 @@ var TcpEventEmitter = function (socket) {
 				var message = JSON.parse(packet); 
 				if (message.subject) {
 					self.emit(message.subject, message.content);
+					self.emit('event', { 
+						name: message.subject, 
+						message: message.content
+					});
 				} else {
 					self.emit('other', message);
 				}
