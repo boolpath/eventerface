@@ -10,7 +10,8 @@ var FIND = {
     retry: {
         attempts: 10,
         timeout: 100
-    } 
+    },
+    found: {}
 };
 
 /** MODULE INTERFACE
@@ -22,11 +23,19 @@ module.exports = {
 
 /*----------------------------------------------------------------------------*/
 
+/** 
+ * @param
+ * @returns
+ */
 function globalNamespace(name, found) {
     console.log('Searching global namespace "/' + name + '"');
     connectToNamespace(name, found);
 }
 
+/** 
+ * @param
+ * @returns
+ */
 function connectToNamespace(name, found, maxAttempts, retryTimeout) {
     var numAttempts = maxAttempts || FIND.retry.attempts,
         timeout = retryTimeout || FIND.retry.timeout,
@@ -34,19 +43,24 @@ function connectToNamespace(name, found, maxAttempts, retryTimeout) {
         attempts = 0,
         socket;
 
-    (function connect() {
-        socket = net.connect(FIND.basepath + name + '.sock', function () {
-            theEventerface = tcpEventify(socket);
-            found(theEventerface);
-        });
-        socket.on('error', function (err) {
-            if (err.errno === 'ECONNREFUSED') {
-                if (++attempts <= numAttempts) {
-                    setTimeout(function () {
-                        connect();
-                    }, timeout);
+    if (!FIND.found[name]) {
+        (function connect() {
+            socket = net.connect(FIND.basepath + name + '.sock', function () {
+                theEventerface = tcpEventify(socket);
+                FIND.found[name] = theEventerface;
+                found(theEventerface);
+            });
+            socket.on('error', function (err) {
+                if (err.errno === 'ECONNREFUSED') {
+                    if (++attempts <= numAttempts) {
+                        setTimeout(function () {
+                            connect();
+                        }, timeout);
+                    }
                 }
-            }
-        });
-    })();
+            });
+        })();
+    } else {
+        found(FIND.found[name]);
+    }
 }
