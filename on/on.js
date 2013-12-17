@@ -25,11 +25,11 @@ function bind(emitter, map) {
 	if (typeof emitter.on !== 'function') {
         return false;
     }
-    emitter.own_on = emitter.on;
+    emitter.ownOn = emitter.on;
 
-    emitter.on = function(eventName, message) {
+    emitter.on = function (eventName, message) {
         map.on(eventName, message, emitter); 
-        emitter.own_on.apply(emitter, [].slice.apply(arguments));
+        emitter.ownOn.apply(emitter, [].slice.apply(arguments));
     }
 
     return true;

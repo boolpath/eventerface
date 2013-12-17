@@ -10,7 +10,7 @@ module.exports = function (name) {
     };
 
     // Map emitted events to all listeners by emitting the event on each of them
-    map.emit = function(eventName, message, emitter) {
+    map.emit = function (eventName, message, emitter) {
         // Register the event if this is the first time it is emitted
         var eventEmitter = map.events[eventName];
         if (!eventEmitter) {
@@ -20,17 +20,17 @@ module.exports = function (name) {
         // If there are any registered listeners to this particular event:
         var eventListeners = map.trees[eventName];
         if (eventListeners) {
-            eventListeners.forEach(function(listener) {
+            eventListeners.forEach(function (listener) {
                 if (typeof listener === 'object' && eventEmitter !== listener &&
                     typeof listener.emit === 'function') {
-                    listener.own_emit(eventName, message);
+                    listener.ownEmit(eventName, message);
                 }
             });     
         }
     }
 
     // Register a listener to a particular event
-    map.on = function(eventName, message, listener) {
+    map.on = function (eventName, message, listener) {
         if (!(map.trees[eventName] instanceof Array)) {
             map.trees[eventName] = [];
         }

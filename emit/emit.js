@@ -25,9 +25,9 @@ function bind(emitter, map) {
     if (typeof emitter.emit !== 'function') {
         return false;
     }
-    emitter.own_emit = emitter.emit;
+    emitter.ownEmit = emitter.emit;
 
-    emitter.emit = function(eventName, message) { 
+    emitter.emit = function (eventName, message) { 
         map.emit(eventName, message, emitter); 
     }
 
