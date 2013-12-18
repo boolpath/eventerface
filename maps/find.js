@@ -60,6 +60,7 @@ function connectToNamespace(name, found, maxAttempts, retryTimeout) {
                     eventedSocket.send(eventName, message);
                 },
                 on: function (eventName, listener) {
+                    eventedSocket.send('on', eventName);
                     eventedSocket.on(eventName, listener);
                 }
             };
