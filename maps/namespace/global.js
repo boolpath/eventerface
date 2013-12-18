@@ -10,7 +10,7 @@ var tcpEventify = require('../../utils/tcpEventify'),
 module.exports = function (name) {
     var map = {
         name: name || 'globalNamespace',
-        socket: {},
+        sockets: [],
         events: {},     // A set of the emitted events
         trees: {}       // A set of arrays of listeners of events
     };
@@ -23,12 +23,24 @@ module.exports = function (name) {
 
     // Create a UNIX socket server
     map.server = net.createServer(map.onConnection = function (unixSocket) {
-        map.socket = tcpEventify(unixSocket);
-        map.socket.on('event', function (event) {
-            map.socket.send(event.name, event.message);
+        // Store the socket for further event mapping
+        var socket = tcpEventify(unixSocket);
+        map.sockets.push(socket);
+
+        // Subscribe a listener to a particular event
+        socket.on('on', function (eventName) {
+            if (!(map.trees[eventName] instanceof Array)) {
+                map.trees[eventName] = [];
+            }
+            map.trees[eventName].push(socket);
+        });
+
+        // Map emitted events to all listeners by sending the event through their corresponding sockets
+        socket.on('event', function (event) {
+            socket.send(event.name, event.message);
         });
     }).listen(path, function () {
-        // console.log('Unix socket created: ' + name + '.sock');
+        console.log('Unix socket created: ' + name + '.sock');
     });
 
     // Map emitted events to all listeners by emitting the event on each of them
