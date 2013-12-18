@@ -14,6 +14,3 @@ eventerface.create('/app', function (app) {
 /* OUTPUT:
     [Nothing. Emitters do not listen to their own events]
 */
-
-
-
