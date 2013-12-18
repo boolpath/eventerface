@@ -9,9 +9,11 @@ var FIND = {
     basepath: __dirname + '/../sockets/',
     retry: {
         attempts: 10,
-        timeout: 100
-    },
-    found: {}
+        timeout: {
+            local: 100,
+            remote: 1000
+        }
+    }
 };
 
 /** MODULE INTERFACE
@@ -29,7 +31,7 @@ module.exports = {
  */
 function globalNamespace(name, found) {
     console.log('Searching global namespace "/' + name + '"');
-    connectToNamespace(name, found);
+    connectToNamespace(name, found, undefined, FIND.retry.timeout.remote);
 }
 
 /** 
@@ -43,32 +45,27 @@ function connectToNamespace(name, found, maxAttempts, retryTimeout) {
         attempts = 0,
         socket;
 
-    if (!FIND.found[name]) {
-        (function connect() {
-            socket = net.connect(FIND.basepath + name + '.sock', function () {
-                var eventedSocket = tcpEventify(socket);
-                theEventerface = {
-                    emit: function (eventName, message) {
-                        eventedSocket.send(eventName, message);
-                    },
-                    on: function (eventName, listener) {
-                        eventedSocket.on(eventName, listener);
-                    }
-                };
-                FIND.found[name] = theEventerface;
-                found(theEventerface);
-            });
-            socket.on('error', function (err) {
-                if (err.errno === 'ECONNREFUSED') {
-                    if (++attempts <= numAttempts) {
-                        setTimeout(function () {
-                            connect();
-                        }, timeout);
-                    }
+    (function connect() {
+        socket = net.connect(FIND.basepath + name + '.sock', function () {
+            var eventedSocket = tcpEventify(socket);
+            theEventerface = {
+                emit: function (eventName, message) {
+                    eventedSocket.send(eventName, message);
+                },
+                on: function (eventName, listener) {
+                    eventedSocket.on(eventName, listener);
                 }
-            });
-        })();
-    } else {
-        found(FIND.found[name]);
-    }
+            };
+            found(theEventerface);
+        });
+        socket.on('error', function (err) {
+            if (err.errno === 'ECONNREFUSED') {
+                if (++attempts <= numAttempts) {
+                    setTimeout(function () {
+                        connect();
+                    }, timeout);
+                }
+            }
+        });
+    })();
 }
