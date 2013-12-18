@@ -37,7 +37,22 @@ module.exports = function (name) {
 
         // Map emitted events to all listeners by sending the event through their corresponding sockets
         socket.on('event', function (event) {
-            socket.send(event.name, event.message);
+            var eventName = event.name;
+            // Register the event if this is the first time it is emitted
+            if (!map.events[eventName]) {
+                map.events[eventName] = socket;
+            }
+
+            // If there are any registered listeners to this particular event:
+            var listeningSockets = map.trees[eventName];
+            if (listeningSockets) {
+                listeningSockets.forEach(function (listener) {
+                    if (typeof listener === 'object' && listener !== socket &&
+                        typeof listener.send === 'function') {
+                        listener.send(eventName, event.message);
+                    }
+                });     
+            }
         });
     }).listen(path, function () {
         console.log('Unix socket created: ' + name + '.sock');
