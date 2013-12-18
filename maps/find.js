@@ -3,7 +3,8 @@ var net = require('net'),
     tcpEventify = require('../utils/tcpEventify');
 
 /** LOCAL OBJECT 
- * @property {} - 
+ * @property {string} basepath - The path to look for unix sockets
+ * @property {object} retry - Describes the number and delay between connection retries
  */
 var FIND = {
     basepath: __dirname + '/../sockets/',
@@ -17,7 +18,7 @@ var FIND = {
 };
 
 /** MODULE INTERFACE
- *@method {function} - 
+ *@method {function} globalNamespace - Looks for an existing global namespace
  */
 module.exports = {
     globalNamespace: globalNamespace
@@ -25,30 +26,36 @@ module.exports = {
 
 /*----------------------------------------------------------------------------*/
 
-/** 
- * @param
- * @returns
+/** Looks for an existing global namespace
+ * @param {string} name - The name of the namespace
+ * @returns {function} found - A function to be called when the namespace is found
  */
 function globalNamespace(name, found) {
     console.log('Searching global namespace "/' + name + '"');
     connectToNamespace(name, found, undefined, FIND.retry.timeout.remote);
 }
 
-/** 
- * @param
+/** Connects to a unix-socket-based namespace
+ * @param {string} name - The name of the namespace
+ * @returns {function} found - A function to be called when the namespace is found
+ * @param {number} maxAttempts - The max number of connection attempts to be done
+ * @param {number} retryTimeout - The delay between unsuccessful connection attempts
  * @returns
  */
 function connectToNamespace(name, found, maxAttempts, retryTimeout) {
     var numAttempts = maxAttempts || FIND.retry.attempts,
         timeout = retryTimeout || FIND.retry.timeout,
-        theEventerface,
+        namespace,
         attempts = 0,
         socket;
 
+    // Try to connect to the namespace's unix socket server
     (function connect() {
         socket = net.connect(FIND.basepath + name + '.sock', function () {
             var eventedSocket = tcpEventify(socket);
-            theEventerface = {
+            // Expose the socket methods through the 'emit' and 'on' methods
+            // of the namespace object to be returned
+            namespace = {
                 emit: function (eventName, message) {
                     eventedSocket.send(eventName, message);
                 },
@@ -56,9 +63,11 @@ function connectToNamespace(name, found, maxAttempts, retryTimeout) {
                     eventedSocket.on(eventName, listener);
                 }
             };
-            found(theEventerface);
+            // Return the found namespace object by invoking the callback
+            found(namespace);
         });
         socket.on('error', function (err) {
+            // Retry on unsuccessful connection attempts
             if (err.errno === 'ECONNREFUSED') {
                 if (++attempts <= numAttempts) {
                     setTimeout(function () {
