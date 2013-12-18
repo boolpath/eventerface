@@ -25,7 +25,7 @@ module.exports = {
  * @param {object} options - Describes the features of the interface
  * @returns
  */
-function create(options) {
+function create(options, callback) {
     var newEventerface, 
         mapping,
         mappingOptions;
@@ -68,7 +68,13 @@ function create(options) {
     mapping = EVENTERFACE.maps.create(mappingOptions);
     newEventerface = EVENTERFACE.factory.createInterface(mapping);
 
-    return newEventerface;
+    if (mappingOptions.scope === 'global' && typeof callback === 'function') {
+        EVENTERFACE.maps.find(mappingOptions, function (eventerface) {
+            callback(eventerface);
+        });
+    } else {
+        return newEventerface;
+    }
 }
 
 /** Finds an existing evented interface, either locally or remotely
