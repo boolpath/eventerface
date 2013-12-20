@@ -2,7 +2,7 @@
 var eventerface = require('../eventerface');
 
 // Find the existing 'app' global namespace
-// (created in example8_listener.js)
+// (created in example08_listener.js)
 eventerface.find('/app', function (app) {
     // Emit an event to the 'app' global namespace for other members to handle
     app.emit('helloWorld');
