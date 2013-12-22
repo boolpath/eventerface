@@ -1,6 +1,26 @@
 #eventerface
 
-Evented API development framework for creating distributed, loosely coupled architectures.
+Evented API development framework for distributed, loosely coupled architectures.
+
+# USAGE
+
+``` js
+var eventerface = require('eventerface');
+// Create an events namespace
+eventerface.create('/app', function (app) {
+    // Start emitting and listening to events using the provided 'app' emitter
+    app.on('/web/register', function (user) {
+        app.emit('/db/newUser/', user);
+    });
+    
+});
+```
+
+# What's wrong with traditional event emitters?
+
+
+# Why evented APIs?
+
 
 #Examples
 
