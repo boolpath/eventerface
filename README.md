@@ -4,6 +4,20 @@ Evented API development framework for distributed, loosely coupled architectures
 
 # USAGE
 
+## Local (same file)
+``` js
+// Create an local event namespace 'app'
+var app = require('eventerface').create(),
+    emitter = new app.emitter(),
+    listener = new app.emitter();
+
+listener.on('hey', function () {
+    console.log('hey');
+});
+emitter.emit('hey');
+```  
+
+## Global (different files, same file system)
 ``` js
 var eventerface = require('eventerface');
 // Create an events namespace
@@ -11,15 +25,17 @@ eventerface.create('/app', function (app) {
     // Start emitting and listening to events using the provided 'app' emitter
     app.on('/web/register', function (user) {
         app.emit('/db/newUser/', user);
-    });
-    
+    }); 
 });
-```
+```  
 
-# What's wrong with traditional event emitters?
+## Distributed (different file systems)
 
 
-# Why evented APIs?
+## What's wrong with traditional event emitters?
+
+
+## Why evented APIs?
 
 
 #Examples
@@ -35,7 +51,7 @@ var eventerface = require('eventerface');
 
 ### Global namespaces
 
-#### One emitter, same listener
+## One emitter, same listener
 
 The following code does not print "Hey!" as is might be expected. That is because 'eventerface' emitters do not listen to their own events:
 
