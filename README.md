@@ -2,9 +2,11 @@
 
 Evented API development framework for distributed, loosely coupled architectures.
 
-# USAGE
+## What's wrong with traditional event emitters?
 
-## Local (same file)
+# Usage
+
+### Local (same file)
 ``` js
 // Create an local event namespace 'app'
 var app = require('eventerface').create(),
@@ -17,25 +19,63 @@ listener.on('hey', function () {
 emitter.emit('hey');
 ```  
 
-## Global (different files, same file system)
+### Global (different files, same file system)
+Eventerface enables the creation on event namespaces that are accessible from more than one file in the same file system by using a unix socket server to create a global namespace.
+
+First, the global namespace has to be created in the designated main file using the #create method:
 ``` js
+// main.js
 var eventerface = require('eventerface');
-// Create an events namespace
+// Create the 'app' global namespace
 eventerface.create('/app', function (app) {
+    // Subscribe to events of the 'app' namespace
+    app.on('/database/ready', function () {
+        // Emit events into the 'app' namespace
+        app.emit('/database/query', query);
+    });
+});
+```  
+
+Then, any other files in the application folder can get access to the created global namespace using the #find method:
+```
+// database.js
+// Find the 'app' global namespace
+eventerface.find('/app', function (app) {
+    // Subscribe to events of the 'app' namespace
+    app.on('/database/query', function (query) {
+        // Query the database
+    });
+    // Emit events into the 'app' namespace
+    app.emit('/database/ready');
+});
+```  
+
+In this usage example, the main.js module listens to the 'ready' event of the database module and then emits a 'query' event to the database. Notice that the modules know nothing about the source of the events nor the location of the other modules, because eventerface emitters only care about event names and interact directly with the namespace itself, not with event emitters.
+
+### Distributed (different file systems)
+```
+eventerface.create('localhost:localport/app', function (app) {
     // Start emitting and listening to events using the provided 'app' emitter
-    app.on('/web/register', function (user) {
-        app.emit('/db/newUser/', user);
+    app.on('/webServer/register', function (user) {
+        app.emit('/database/newUser', user);
     }); 
 });
 ```  
 
-## Distributed (different file systems)
+
+```
+eventerface.find('remotehost:remoteport/app', function (app) {
+    // Start emitting and listening to events using the provided 'app' emitter
+    app.on('/database/newUser', function (user) {
+        app.emit('/webServer/registerResult', result);
+    }); 
+});
+```  
+
+# Why evented APIs?
 
 
-## What's wrong with traditional event emitters?
 
-
-## Why evented APIs?
 
 
 #Examples
