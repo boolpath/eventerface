@@ -26,12 +26,11 @@ First, the global namespace has to be created in the designated main file using 
 ``` js
 // main.js
 var eventerface = require('eventerface');
+
 // Create the 'app' global namespace
 eventerface.create('/app', function (app) {
-    // Subscribe to events of the 'app' namespace
-    app.on('/database/ready', function () {
-        // Emit events into the 'app' namespace
-        app.emit('/database/query', query);
+    app.on('/database/ready', function () { // Subscribe to events of the 'app' namespace
+        app.emit('/database/query', query); // Emit events into the 'app' namespace
     });
 });
 ```  
@@ -39,18 +38,18 @@ eventerface.create('/app', function (app) {
 Then, any other files in the application folder can get access to the created global namespace using the #find method:
 ``` js
 // database.js
+var eventerface = require('eventerface');
+
 // Find the 'app' global namespace
 eventerface.find('/app', function (app) {
-    // Subscribe to events of the 'app' namespace
-    app.on('/database/query', function (query) {
+    app.on('/database/query', function (query) { // Subscribe to events of the 'app' namespace
         // Query the database
     });
-    // Emit events into the 'app' namespace
-    app.emit('/database/ready');
+    app.emit('/database/ready');                 // Emit events into the 'app' namespace
 });
 ```  
 
-In this usage example, the main.js module listens to the 'ready' event of the database module and then emits a 'query' event to the database. Notice that the modules know nothing about the source of the events nor the location of the other modules, because eventerface emitters only care about event names and interact directly with the namespace itself, not with event emitters.
+In this usage example, the main.js module listens to the 'ready' event of the database module and then emits a 'query' event to the database. Notice that the modules know nothing about the origin of the events nor the location of the other modules, because eventerface emitters only care about event names and interact directly with the namespace itself, not with event emitters.
 
 ### Distributed (different file systems)
 ```
