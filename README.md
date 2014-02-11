@@ -37,7 +37,7 @@ eventerface.create('/app', function (app) {
 ```  
 
 Then, any other files in the application folder can get access to the created global namespace using the #find method:
-```
+``` js
 // database.js
 // Find the 'app' global namespace
 eventerface.find('/app', function (app) {
