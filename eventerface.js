@@ -51,7 +51,14 @@ function create(options, callback) {
             
             }
         } else {
-
+            var parts = options.split('://');
+            if (['channel', 'station', 'api'].indexOf(parts[0]) >= 0) {
+                mappingOptions = { 
+                    scope: 'distributed', 
+                    type: parts[0],
+                    port: parts[1]
+                };
+            }
         }
     } else if (typeof options === 'object') {
 
@@ -65,12 +72,16 @@ function create(options, callback) {
         newEventerface = EVENTERFACE.factory.createInterface(mapping);
 
     // Return the created eventerface through a callback or by reference
-    if (mappingOptions.scope === 'global' && typeof callback === 'function') {
+    if (mappingOptions.scope === 'local') {
+        return {
+            emitter: function () {
+                return EVENTERFACE.factory.createEmitter(mapping);
+            }
+        };
+    } else if (mappingOptions.scope === 'global' && typeof callback === 'function') {
         EVENTERFACE.maps.find(mappingOptions, function (eventerface) {
             callback(eventerface);
         });
-    } else {
-        return newEventerface;
     }
 }
 
