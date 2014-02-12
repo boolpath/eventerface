@@ -2,9 +2,8 @@
  * @param {string} name - The name of the map
  * @returns {object} map - The local map created
  */
-module.exports = function (name) {
+module.exports = function () {
     var map = {
-        name: name || 'localNamespace',
         events: {},     // A set of the emitted events
         trees: {}       // A set of arrays of listeners of events
     };
