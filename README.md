@@ -2,9 +2,9 @@
 
 Evented API development framework for distributed, loosely coupled architectures.
 
-### What's wrong with traditional event emitters?
+## Why Eventerface? A different way of thinking about events
 
-Node.js event-driven model is awesome, but there is something weird about it: event emitters need to be known by the parties interested in generating events for them to handle. This is not a problem in cases where the parties know and have access to each other, like a conversation between friends:
+Node.js event-driven model is awesome, but there is something weird about it: event emitters need to be known by the parties interested in generating events for them. This is not a problem in cases where the parties know and have access to each other, like a conversation between friends:
 
 ``` js
 var EventEmitter = require('events').EventEmitter,
@@ -27,7 +27,9 @@ friend1.on('say', function (message) {
 });
 ```  
 
-However, not all events and interactions in the real world happen between parties that know each other or each other's names (or variables), so a different approach is needed in order to enable decoupled interactions such as conversations between strangers, which are possible because there is a namespace that carries voice events between them: the air.
+However, not all events and interactions in the real world happen between parties that know each other or each other's names (or variables), so a different approach is needed in order to enable decoupled interactions such as conversations between strangers, which are possible in the real world because there is a namespace that carries voice events between them: the air.
+
+### Dealing with events, not event emitters
 
 Using Eventerface, the previous conversation can be written in such a way that it doesn't matter if the parties know each other or not, because the events are emitted into a namespace (e.g. air) using the namespace's event emitter, not the other parties' emitters:
 
@@ -54,7 +56,7 @@ person1.on('say', function (message) {
 
 ```  
 
-
+In this way, a party that wants to emit an event only needs to emit it into a given namespace, and it will be automatically routed to all the listeners subscribed to that event in the same namespace. Notice that thinking about events by themselves, and not about their event emitters, causes a change in notation that makes more sense when reading the code, because when a person wants so say something, she uses her own mouth (i.e. calls her own #emit method), not the target person's mouth (or #emit method).
 
 # Usage
 
