@@ -44,7 +44,7 @@ function globalNamespace(name, found) {
  */
 function connectToNamespace(name, found, maxAttempts, retryTimeout) {
     var numAttempts = maxAttempts || FIND.retry.attempts,
-        timeout = retryTimeout || FIND.retry.timeout,
+        timeout = retryTimeout || FIND.retry.timeout.local,
         namespace,
         attempts = 0,
         socket;
