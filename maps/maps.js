@@ -34,22 +34,20 @@ module.exports = {
  */
 function create(options) {
     var type = options.type,
+        scope = options.scope,
         map;
 
-    switch (options.scope) {
-    case 'local':
+    if (scope === 'local') {
         if (type === 'namespace') {
             map = MAPS.create.local.namespace(options.name);
         }
-        break;
-    case 'global':
+    } else if (scope === 'global') {
         if (type === 'namespace') {
             map = MAPS.create.global.namespace(options.name);
         } else if (type === 'channel') {
 
         }
-        break;
-    case 'distributed':
+    } else if (scope === 'distributed') {
         if (type === 'channel') {
 
         } else if (type === 'station') {
@@ -57,9 +55,6 @@ function create(options) {
         } else if (type === 'api') {
 
         }
-        break;
-    default:
-        break;
     }
 
     return map;
@@ -70,22 +65,20 @@ function create(options) {
  * @returns
  */
 function find(options, onFound) {
-    var type = options.type;
+    var type = options.type,
+        scope = options.scope;
 
-    switch (options.scope) {
-    case 'local':
+    if(scope === 'local') {
         if (type === 'namespace') {
             
         }
-        break;
-    case 'global':
+    } else if (scope === 'global') {
         if (type === 'namespace') {
             MAPS.find.globalNamespace(options.name, onFound);
         } else if (type === 'channel') {
 
         }
-        break;
-    case 'distributed':
+    } else if (scope === 'distributed') {
         if (type === 'channel') {
 
         } else if (type === 'station') {
@@ -93,8 +86,5 @@ function find(options, onFound) {
         } else if (type === 'api') {
 
         }
-        break;
-    default:
-        break;
     }
 }
