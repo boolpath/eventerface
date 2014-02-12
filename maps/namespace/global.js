@@ -1,9 +1,10 @@
+/* NODE MODULES */
 var tcpEventify = require('../../utils/tcpEventify'),
     net = require('net'),
     fs = require('fs'),
     basepath = __dirname + '/../../sockets/';
 
-/** Creates a simple global mapper that routes every event to its listeners
+/** Creates a simple global mapper that routes every event to its listeners using unix sockets
  * @param {string} name - The name of the map
  * @returns {object} map - The global map created
  */
