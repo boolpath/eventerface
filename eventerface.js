@@ -38,21 +38,20 @@ function create(options, callback) {
         };
     } else if (typeof options === 'string') {
         if (options.indexOf('/') === -1) {
-            // #create(app): local namespace 'app'
-            mappingOptions = { 
-                name: options,
-                scope: 'local', 
-                type: 'namespace'
-            };
-        } else if (options.indexOf('/') === 0) {
-            if (options.lastIndexOf('/') === 0) {
-            // #create(/app): global namespace 'app'
-                mappingOptions = {
-                    name: options.split('/')[1],
-                    scope: 'global',
+            // #create(app): global namespace 'app'
+            if (options.indexOf(':') === -1) {
+                mappingOptions = { 
+                    name: options,
+                    scope: 'global', 
                     type: 'namespace'
                 };
+            } 
+        } else if (options.indexOf('/') === 0) {
+            if (options.lastIndexOf('/') === 0) {
+            
             }
+        } else {
+
         }
     } else if (typeof options === 'object') {
 
@@ -82,20 +81,22 @@ function create(options, callback) {
 function find(options, onFound) {
     var map;
 
-    if (typeof options === 'undefined') {
-
-    } else if (typeof options === 'string') {
+    if (typeof options === 'string') {
+        // #find(app): global namespace 'app'
         if (options.indexOf('/') === -1) {
-            
-        } else if (options.indexOf('/') === 0) {
-        // #find(/app): global namespace 'app'
-            if (options.lastIndexOf('/') === 0) {
+            if (options.indexOf(':') === -1) {
                 map = {
-                    name: options.split('/')[1],
+                    name: options,
                     scope: 'global',
                     type: 'namespace' 
                 };
             }
+        } else if (options.indexOf('/') === 0) {
+            if (options.lastIndexOf('/') === 0) {
+                
+            }
+        } else {
+
         }
     } else if (typeof options === 'object') {
 
