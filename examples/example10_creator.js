@@ -4,4 +4,4 @@
 // SEPARATE INTERFACE CREATOR (IN THIS FILE)
 var eventerface = require('../eventerface');
 
-eventerface.create('/app');
+eventerface.create('app');
