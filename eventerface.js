@@ -30,15 +30,13 @@ function create(options, callback) {
         mapping;        // The event mapping object created according to mappingOptions
 
     // Inspect options
-    switch (typeof options) {
-    case 'undefined':
+    if (typeof options === 'undefined') {
         // #create(): local namespace
         mappingOptions = { 
             scope: 'local', 
             type: 'namespace'
         };
-        break;
-    case 'string':
+    } else if (typeof options === 'string') {
         if (options.indexOf('/') === -1) {
             // #create(app): local namespace 'app'
             mappingOptions = { 
@@ -56,12 +54,8 @@ function create(options, callback) {
                 };
             }
         }
-        break;
-    case 'object':
-        
-        break;
-    default:
-        break;
+    } else if (typeof options === 'object') {
+
     }
 
     console.log('Creating ' + mappingOptions.scope, mappingOptions.type, mappingOptions.name || '');
@@ -88,15 +82,13 @@ function create(options, callback) {
 function find(options, onFound) {
     var map;
 
-    switch (typeof options) {
-    case 'undefined':
-        
-        break;
-    case 'string':
+    if (typeof options === 'undefined') {
+
+    } else if (typeof options === 'string') {
         if (options.indexOf('/') === -1) {
             
         } else if (options.indexOf('/') === 0) {
-            // #find(/app): global namespace 'app'
+        // #find(/app): global namespace 'app'
             if (options.lastIndexOf('/') === 0) {
                 map = {
                     name: options.split('/')[1],
@@ -105,12 +97,8 @@ function find(options, onFound) {
                 };
             }
         }
-        break;
-    case 'object':
-        
-        break;
-    default:
-        break;
+    } else if (typeof options === 'object') {
+
     }
 
     EVENTERFACE.maps.find(map, onFound);
