@@ -1,8 +1,7 @@
 /* NODE MODULES */
 var eventEmitter = require('events').EventEmitter,
     emit = require('../emit'),
-    on = require('../on'),
-    unixSocket = require('./unixSocket');
+    on = require('../on');
 
 /** LOCAL OBJECT
  * @property {object} maps - The set of event mapping namespaces
@@ -27,9 +26,7 @@ module.exports = {
  */
 function createInterface(mapping) {
     var newEventerface = {
-        emitter: function () {
-            return createEmitter(mapping);
-        }
+        map: mapping
     };
 
     return newEventerface;
