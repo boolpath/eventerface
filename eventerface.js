@@ -64,10 +64,10 @@ function create(options, callback) {
 
     }
 
-    console.log('Creating ' + mappingOptions.scope, mappingOptions.type, mappingOptions.name || '');
+    // console.log('Creating ' + mappingOptions.scope, mappingOptions.type, mappingOptions.name || '');
 
     // Create the event mapping object accoding to the specified options
-        mapping = EVENTERFACE.maps.create(mappingOptions);
+    mapping = EVENTERFACE.maps.create(mappingOptions);
 
     // Return the created eventerface through a callback or by reference
     if (mappingOptions.scope === 'local') {
@@ -76,12 +76,16 @@ function create(options, callback) {
                 return EVENTERFACE.factory.createEmitter(mapping);
             }
         };
-    } else {
+    } else if (mappingOptions.scope === 'global') {
         EVENTERFACE.maps.find(mappingOptions, function (eventerface) {
             if (typeof callback === 'function') {
                 callback(eventerface);
             }
         });
+    } else if (mappingOptions.scope === 'distributed') {
+        if (typeof callback === 'function') {
+            callback(mapping);
+        }
     }
 }
 
@@ -107,7 +111,16 @@ function find(options, onFound) {
                 
             }
         } else {
-
+            var parts = options.split('://'),
+                target = parts[1].split(':');
+            if (['channel', 'station', 'api'].indexOf(parts[0]) >= 0) {
+                mapping = { 
+                    scope: 'distributed', 
+                    type: parts[0],
+                    host: target[0],
+                    port: target[1]
+                };
+            }
         }
     } else if (typeof options === 'object') {
 
