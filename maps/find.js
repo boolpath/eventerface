@@ -111,6 +111,7 @@ function connectToTcpSocket(options, found, maxAttempts, retryTimeout) {
                     eventedSocket.on(eventName, listener);
                 }
             };
+            emitter.send = emitter.emit;
             found(emitter);
         });
         socket.on('error', function (err) {
