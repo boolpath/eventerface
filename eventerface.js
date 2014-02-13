@@ -68,8 +68,6 @@ function create(options, callback) {
 
     // Create the event mapping object accoding to the specified options
         mapping = EVENTERFACE.maps.create(mappingOptions);
-    // Create the eventerface using the mapping object
-        newEventerface = EVENTERFACE.factory.createInterface(mapping);
 
     // Return the created eventerface through a callback or by reference
     if (mappingOptions.scope === 'local') {
@@ -78,9 +76,11 @@ function create(options, callback) {
                 return EVENTERFACE.factory.createEmitter(mapping);
             }
         };
-    } else if (mappingOptions.scope === 'global' && typeof callback === 'function') {
+    } else {
         EVENTERFACE.maps.find(mappingOptions, function (eventerface) {
-            callback(eventerface);
+            if (typeof callback === 'function') {
+                callback(eventerface);
+            }
         });
     }
 }
@@ -90,13 +90,13 @@ function create(options, callback) {
  * @param {function} onFound - A callback to invoke when the eventerface is found
  */
 function find(options, onFound) {
-    var map;
+    var mapping;
 
     if (typeof options === 'string') {
         // #find(app): global namespace 'app'
         if (options.indexOf('/') === -1) {
             if (options.indexOf(':') === -1) {
-                map = {
+                mapping = {
                     name: options,
                     scope: 'global',
                     type: 'namespace' 
@@ -113,5 +113,5 @@ function find(options, onFound) {
 
     }
 
-    EVENTERFACE.maps.find(map, onFound);
+    EVENTERFACE.maps.find(mapping, onFound);
 }
