@@ -13,6 +13,9 @@ var MAPS = {
         },
         global: {
             namespace: require('./namespace/global.js')
+        },
+        distributed: {
+            channel: require('./channel/distributed.js')
         }
     },
     find: require('./find.js')
@@ -38,18 +41,18 @@ function create(options) {
         map;
 
     if (scope === 'local') {
-        if (type === 'namespace') {
-            map = MAPS.create.local.namespace(options.name);
+        if (type === 'namespace') { // #create(): local namespace
+            map = MAPS.create.local.namespace();
         }
     } else if (scope === 'global') {
-        if (type === 'namespace') {
+        if (type === 'namespace') { // #create('app'): global namespace 'app'
             map = MAPS.create.global.namespace(options.name);
         } else if (type === 'channel') {
 
         }
-    } else if (scope === 'distributed') {
+    } else if (scope === 'distributed') { // #create('channel://port')
         if (type === 'channel') {
-
+            map = MAPS.create.distributed.channel(options.port);
         } else if (type === 'station') {
 
         } else if (type === 'api') {
@@ -80,7 +83,7 @@ function find(options, onFound) {
         }
     } else if (scope === 'distributed') {
         if (type === 'channel') {
-
+            MAPS.find.distributed.channel(options, onFound);
         } else if (type === 'station') {
 
         } else if (type === 'api') {

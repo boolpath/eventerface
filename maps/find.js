@@ -11,7 +11,7 @@ var FIND = {
     retry: {
         attempts: 10,
         timeout: {
-            local: 100,
+            local: 500,
             remote: 1000
         }
     }
@@ -21,7 +21,10 @@ var FIND = {
  *@method {function} globalNamespace - Looks for an existing global namespace
  */
 module.exports = {
-    globalNamespace: globalNamespace
+    globalNamespace: globalNamespace,
+    distributed: {
+        channel: distributedChannel
+    }
 };
 
 /*----------------------------------------------------------------------------*/
@@ -31,8 +34,8 @@ module.exports = {
  * @returns {function} found - A function to be called when the namespace is found
  */
 function globalNamespace(name, found) {
-    console.log('Searching global namespace "/' + name + '"');
-    connectToNamespace(name, found, undefined, FIND.retry.timeout.remote);
+    console.log('Searching global namespace "' + name + '"');
+    connectToUnixSocket(name, found);
 }
 
 /** Connects to a unix-socket-based namespace
@@ -42,7 +45,7 @@ function globalNamespace(name, found) {
  * @param {number} retryTimeout - The delay between unsuccessful connection attempts
  * @returns
  */
-function connectToNamespace(name, found, maxAttempts, retryTimeout) {
+function connectToUnixSocket(name, found, maxAttempts, retryTimeout) {
     var numAttempts = maxAttempts || FIND.retry.attempts,
         timeout = retryTimeout || FIND.retry.timeout.local,
         namespace,
@@ -66,6 +69,43 @@ function connectToNamespace(name, found, maxAttempts, retryTimeout) {
             };
             // Return the found namespace object by invoking the callback
             found(namespace);
+        });
+        socket.on('error', function (err) {
+            // Retry on unsuccessful connection attempts
+            if (err.errno === 'ECONNREFUSED') {
+                if (++attempts <= numAttempts) {
+                    setTimeout(function () {
+                        connect();
+                    }, timeout);
+                }
+            }
+        });
+    })();
+}
+
+/**
+ *
+ */
+function distributedChannel(options, found) {
+    console.log('Searching distributed channel on port', options.port);
+    connectToTcpSocket(options, found);
+}
+
+/**
+ *
+ */
+function connectToTcpSocket(options, found, maxAttempts, retryTimeout) {
+    var numAttempts = maxAttempts || FIND.retry.attempts,
+        timeout = retryTimeout || FIND.retry.timeout.remote,
+        namespace,
+        attempts = 0,
+        socket;
+
+    // Try to connect to the namespace's unix socket server
+    (function connect() {
+        socket = net.connect(options, function () {
+            var eventedSocket = tcpEventify(socket);
+            
         });
         socket.on('error', function (err) {
             // Retry on unsuccessful connection attempts
