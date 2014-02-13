@@ -34,7 +34,7 @@ module.exports = {
  * @returns {function} found - A function to be called when the namespace is found
  */
 function globalNamespace(name, found) {
-    console.log('Searching global namespace "' + name + '"');
+    // console.log('Searching global namespace "' + name + '"');
     connectToUnixSocket(name, found);
 }
 
@@ -48,17 +48,16 @@ function globalNamespace(name, found) {
 function connectToUnixSocket(name, found, maxAttempts, retryTimeout) {
     var numAttempts = maxAttempts || FIND.retry.attempts,
         timeout = retryTimeout || FIND.retry.timeout.local,
-        namespace,
         attempts = 0,
         socket;
 
-    // Try to connect to the namespace's unix socket server
+    // Try to connect to the unix socket server
     (function connect() {
         socket = net.connect(FIND.basepath + name + '.sock', function () {
             var eventedSocket = tcpEventify(socket);
             // Expose the socket methods through the 'emit' and 'on' methods
             // of the namespace object to be returned
-            namespace = {
+            var emitter = {
                 emit: function (eventName, message) {
                     eventedSocket.send(eventName, message);
                 },
@@ -68,7 +67,7 @@ function connectToUnixSocket(name, found, maxAttempts, retryTimeout) {
                 }
             };
             // Return the found namespace object by invoking the callback
-            found(namespace);
+            found(emitter);
         });
         socket.on('error', function (err) {
             // Retry on unsuccessful connection attempts
@@ -87,7 +86,7 @@ function connectToUnixSocket(name, found, maxAttempts, retryTimeout) {
  *
  */
 function distributedChannel(options, found) {
-    console.log('Searching distributed channel on port', options.port);
+    // console.log('Searching distributed channel on port', options.port);
     connectToTcpSocket(options, found);
 }
 
@@ -97,15 +96,22 @@ function distributedChannel(options, found) {
 function connectToTcpSocket(options, found, maxAttempts, retryTimeout) {
     var numAttempts = maxAttempts || FIND.retry.attempts,
         timeout = retryTimeout || FIND.retry.timeout.remote,
-        namespace,
         attempts = 0,
         socket;
 
-    // Try to connect to the namespace's unix socket server
+    // Try to connect to the tcp socket server
     (function connect() {
         socket = net.connect(options, function () {
             var eventedSocket = tcpEventify(socket);
-            
+            var emitter = {
+                emit: function (eventName, message) {
+                    eventedSocket.send(eventName, message);
+                },
+                on: function (eventName, listener) {
+                    eventedSocket.on(eventName, listener);
+                }
+            };
+            found(emitter);
         });
         socket.on('error', function (err) {
             // Retry on unsuccessful connection attempts
