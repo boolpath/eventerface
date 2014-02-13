@@ -33,7 +33,7 @@ However, not all events and interactions in the real world happen between partie
 
 ### Dealing with events, not event emitters
 
-Using Eventerface, the previous conversation can be written in such a way that it doesn't matter if the parties know each other or not, because the events are emitted into a namespace (e.g. air) using the namespace's event emitter, not the other parties' emitters:
+Using Eventerface, the previous conversation can be written in such a way that it doesn't matter if the parties know each other or not, because the events are emitted into a namespace (e.g. the air) using the namespace's event emitter, not the other parties' emitters:
 
 ``` js
 var eventerface = require('eventerface'),
@@ -58,7 +58,7 @@ person1.on('say', function (message) {
 
 ```  
 
-In this way, a party that wants to emit an event only needs to emit it into a given namespace, and it will be automatically routed to all the listeners subscribed to that event in the same namespace (e.g. people in the same room). Notice that thinking about events by themselves, and not about their event emitters, causes a change in notation that makes more sense when reading the code, because when a person wants so say something, she uses her own mouth (i.e. calls her own #emit method), not the target person's mouth (or #emit method).
+In this way, when a party wants to emit an event it only needs to emit it into a given namespace, and it will be automatically routed to all the listeners subscribed to that event in the same namespace (e.g. people in the same room). Notice that thinking about events, and not about event emitters, causes a change in notation that makes more sense when reading the code, because when a person wants to say something, she uses her own mouth (i.e. calls her own #emit method), not the target person's mouth.
 
 # Usage
 
@@ -84,7 +84,7 @@ First, the global namespace has to be created in the designated main file using 
 var eventerface = require('eventerface');
 
 // Create the 'app' global namespace
-eventerface.create('/app', function (app) {
+eventerface.create('app', function (app) {
     app.on('/database/ready', function () { // Subscribe to events of the 'app' namespace
         app.emit('/database/query', query); // Emit events into the 'app' namespace
     });
@@ -97,7 +97,7 @@ Then, any other files in the application folder can get access to the created gl
 var eventerface = require('eventerface');
 
 // Find the 'app' global namespace
-eventerface.find('/app', function (app) {
+eventerface.find('app', function (app) {
     app.on('/database/query', function (query) { // Subscribe to events of the 'app' namespace
         // Query the database
     });
@@ -105,14 +105,14 @@ eventerface.find('/app', function (app) {
 });
 ```  
 
-In this usage example, the main.js module listens to the 'ready' event of the database module and then emits a 'query' event to the database. Notice that the modules know nothing about the origin of the events nor the location of the other modules, because Eventerface emitters only care about event names and interact directly with the namespace itself, not with event emitters.
+In this usage example, the main.js module listens to the 'ready' event of the database module and then emits a 'query' event to the database. Notice that the modules know nothing about the origin of the events nor the location of the other modules, because Eventerface emitters only care about event names and interact directly with the namespace as a whole, not with particular event emitters.
 
 ### Distributed (different file systems)
 ``` js
 
 ```
 
-# Evented APIs
+# Eventful APIs
 
 # Examples
 
