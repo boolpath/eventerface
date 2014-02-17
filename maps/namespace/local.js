@@ -1,5 +1,4 @@
 /** Creates a simple local mapper that routes every event to its listeners
- * @param {string} name - The name of the map
  * @returns {object} map - The local map created
  */
 module.exports = function () {
@@ -13,12 +12,13 @@ module.exports = function () {
         // Register the event if this is the first time it is emitted
         var eventEmitter = map.events[eventName];
         if (!eventEmitter) {
-            eventEmitter = emitter;
+            map.events[eventName] = eventEmitter = emitter;
         }
 
         // If there are any registered listeners to this particular event:
         var eventListeners = map.trees[eventName];
         if (eventListeners) {
+            // Send the event to each listener
             eventListeners.forEach(function (listener) {
                 if (typeof listener === 'object' && eventEmitter !== listener &&
                     typeof listener.emit === 'function') {
