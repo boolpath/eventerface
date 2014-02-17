@@ -114,37 +114,40 @@ Eventerface can also be used to create evented interfaces that are accessible fr
 Distributed channels are point-to-point interfaces that allow two parties to send and receive events from each other without worrying about the underlying TCP connection.
 
 In order to create a distributed channel, a string containing the 'channel://' prefix followed by the desired port number of the local side of the channel must be passed as a parameter to the #create method:
+
 ``` js
-// channelEnd1.js
+// database.js
 var eventerface = require('eventerface');
 
 // Create
-eventerface.create('channel://23000', function (channel) {
-    setInterval(function () {
-        channel.emit('hello');
-    }, 1000);
-    channel.on('world', function () {
-        console.log('world!');
+eventerface.create('channel://databasePort', function (app) {
+    // 'app': the channel created by the database to communicate with the application
+    app.on('query', function (query) {
+        // Query the database
+        app.emit('result', result);
     });
 });
-```
+```  
 
-Then, a channel created on another server or file system can be connected to the previous channel by calling the channel#connect method with a string containing the target host and port number separated by a colon:
+Then, a channel created on another server can be connected to the previous channel by calling the channel#connect method with a string containing the target host and port number separated by a colon:
+
 ``` js
-// channelEnd2.js
+// app.js
 var eventerface = require('eventerface');
 
 // Create
-eventerface.create('channel://46000', function (channel) {
-    channel.connect('remotehost1:23000');
-    channel.on('hello', function () {
-        console.log('hello!');
-        channel.emit('world');
+eventerface.create('channel://appPort', function (database) { 
+    // 'database': the channel created by the application to communicate with the database
+    database.connect('databaseHost:databasePort', function () {
+        database.emit('query', query);
+        database.on('result', function (query) {
+            // Use query result
+        })
     });
 });
-```
+```  
 
-In this usage example, the channelEnd1.js file creates a distributed channel end on port 23000 and starts emiting the 'hello' event every second. On another server, the channelEnd2.js file creates a distributed channel end on port 46000, connects it to channelEnd1's channel on 'remotehost1', and starts emitting a 'world' event every time it receives a 'hello' event.
+In this usage example, the database.js file creates a distributed channel end on port 'databasePort', subscribes to the 'query' event and emits a 'result' event after querying the database. On another server, the app.js file creates a distributed channel end on port 'appPort', connects it to the database's channel on 'databaseHost:databasePort', emits the 'query' event and subscribes to the 'result' event in order to handle the received response.
 
 #### - Distributed Stations
 
