@@ -108,16 +108,52 @@ eventerface.find('app', function (app) {
 In this usage example, the main.js module listens to the 'ready' event of the database module and then emits a 'query' event to the database. Notice that the modules know nothing about the origin of the events nor the location of the other modules, because Eventerface emitters only care about event names and interact directly with the namespace as a whole, not with particular event emitters.
 
 ### Distributed (different file systems)
-``` js
+Eventerface can also be used to create evented interfaces that are accessible from different servers or file systems in order to establish one-to-one, one-to-many and many-to-one event-based communications.
 
+#### - Distributed Channels
+Distributed channels are point-to-point interfaces that allow two parties to send and receive events from each other without worrying about the underlying TCP connection.
+
+In order to create a distributed channel, a string containing the 'channel://' prefix followed by the desired port number of the local side of the channel must be passed as a parameter to the #create method:
+``` js
+// channelEnd1.js
+var eventerface = require('eventerface');
+
+// Create
+eventerface.create('channel://23000', function (channel) {
+    setInterval(function () {
+        channel.emit('hello');
+    }, 1000);
+    channel.on('world', function () {
+        console.log('world!');
+    });
+});
 ```
 
+Then, a channel created on another server or file system can be connected to the previous channel by calling the channel#connect method with a string containing the target host and port number separated by a colon:
+``` js
+// channelEnd2.js
+var eventerface = require('eventerface');
+
+// Create
+eventerface.create('channel://46000', function (channel) {
+    channel.connect('remotehost1:23000');
+    channel.on('hello', function () {
+        console.log('hello!');
+        channel.emit('world');
+    });
+});
+```
+
+In this usage example, the channelEnd1.js file creates a distributed channel end on port 23000 and starts emiting the 'hello' event every second. On another server, the channelEnd2.js file creates a distributed channel end on port 46000, connects it to channelEnd1's channel on 'remotehost1', and starts emitting a 'world' event every time it receives a 'hello' event.
+
+#### - Distributed Stations
+
 # Eventful APIs
+Eventerface can also be used to expose collections of event related resources through RESTlike Web APIs.
 
 # Examples
 
 # License
-
 MIT
 
 
