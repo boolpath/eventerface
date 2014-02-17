@@ -111,6 +111,7 @@ function find(options, onFound) {
                 
             }
         } else {
+            // #find(prefix://host:port): distributed <prefix> (channel, station or api)
             var parts = options.split('://'),
                 target = parts[1].split(':');
             if (['channel', 'station', 'api'].indexOf(parts[0]) >= 0) {

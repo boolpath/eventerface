@@ -111,12 +111,12 @@ In this usage example, the main.js module listens to the 'ready' event of the da
 Eventerface can also be used to create evented interfaces that are accessible from different servers or file systems in order to establish one-to-one, one-to-many and many-to-one event-based communications.
 
 #### - Distributed Channels
-Distributed channels are point-to-point interfaces that allow two parties to send and receive events from each other without worrying about the underlying TCP connection.
+Distributed channels are point-to-point interfaces that allow two remote parties to send and receive events from each other without worrying about the underlying TCP connection.
 
-In order to create a distributed channel, a string containing the 'channel://' prefix followed by the desired port number of the local side of the channel must be passed as a parameter to the #create method:
+In order to create a distributed channel, a string containing the 'channel://' prefix followed by the desired port number of the channel must be passed as a parameter to the #create method:
 
 ``` js
-// database.js
+// database.js on databaseHost server
 var eventerface = require('eventerface');
 
 // Create a distributed channel on port 'databasePort'
@@ -129,25 +129,23 @@ eventerface.create('channel://databasePort', function (app) {
 });
 ```  
 
-Then, a channel created on another server can be connected to the previous channel by calling the channel#connect method with a string containing the target host and port number separated by a colon:
+Then, a file on another server can connect to this channel using the #find method with a string containing the 'channel://' prefix followed by the target host and port number separated by a colon:
 
 ``` js
-// app.js
+// app.js on appHost server
 var eventerface = require('eventerface');
 
-// Create a distributed channel on port 'appPort'
-eventerface.create('channel://appPort', function (database) { 
+// Find a distributed channel on host 'databaseHost' and port 'databasePort'
+eventerface.find('channel://databaseHost:databasePort', function (database) { 
     // 'database': the channel created by the application to communicate with the database
-    database.connect('databaseHost:databasePort', function () {
-        database.emit('query', query);
-        database.on('result', function (query) {
-            // Use query result
-        })
-    });
+    database.emit('query', query);
+    database.on('result', function (query) {
+        // Handle query result
+    })
 });
 ```  
 
-In this usage example, the database.js file creates a distributed channel end on port 'databasePort', subscribes to the 'query' event and emits a 'result' event after querying the database. On another server, the app.js file creates a distributed channel end on port 'appPort', connects it to the database's channel on 'databaseHost:databasePort', emits the 'query' event and subscribes to the 'result' event in order to handle the received response.
+In this usage example, the database.js file on host 'databaseHost' creates a distributed channel on port 'databasePort', subscribes to the 'query' event and emits a 'result' event after querying the database. On another server ('appHost'), the app.js file connects to the database's channel on host 'databaseHost' and port 'databasePort', emits the 'query' event and subscribes to the 'result' event for further handling.
 
 #### - Distributed Stations
 
