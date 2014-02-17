@@ -1,13 +1,13 @@
 {
     "name": "eventerface",
-    "description": "Evented API development framework for distributed, loosely coupled architectures.",
+    "description": "Evented API development framework.",
     "homepage": "https://github.com/jorgezaccaro/eventerface#eventerface",
     "author": {
         "name": "Jorge Zaccaro",
         "email": "jorgezaccaro@gmail.com",
         "url": "https://github.com/jorgezaccaro"
     },
-    "version": "0.0.1",
+    "version": "0.0.2",
     "license": "MIT",
     "depedencies": {
         "tcp-eventify": ">= 0.0.1"
