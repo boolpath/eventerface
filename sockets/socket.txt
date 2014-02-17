@@ -1,0 +1,1 @@
+The 'sockets' folder is where the unix sockets used for global namespaces will be stored.
