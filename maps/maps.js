@@ -40,7 +40,7 @@ module.exports = {
 function create(options) {
     var type = options.type,    // namespace, channel, station, api
         scope = options.scope,  // local, global or distributed
-        map = {};
+        map;
 
     if (scope === 'local') {        // (same file)
         if (type === 'namespace') { // #create(): local namespace
