@@ -3,37 +3,18 @@ var eventEmitter = require('events').EventEmitter,
     emit = require('../emit'),
     on = require('../on');
 
-/** LOCAL OBJECT
- * @property {object} maps - The set of event mapping namespaces
- */
-var FACTORY = {
-	maps: {}
-}; 
-
 /** MODULE INTERFACE 
- * @method {function} - 
+ * @method {function} createEmitter - Creates an event emitter in a given mapping context
+                                      by attaching custom handlers and methods
  */
 module.exports = {
-    createInterface: createInterface,
     createEmitter: createEmitter
 }
 
 /*----------------------------------------------------------------------------*/
 
-/** 
- * @param
- * @returns
- */
-function createInterface(mapping) {
-    var newEventerface = {
-        map: mapping
-    };
-
-    return newEventerface;
-}
-
-/** Creates a new event emitter object by attaching custom handlers and methods
- * @param {string} mapping - The event mapping system to be used
+/** Creates an event emitter in a given mapping context by attaching custom handlers and methods
+ * @param {string} mapping - The event mapping system where the emitter will be created
  * @returns {object} mappedEmitter - The new, mapped event emitter object
  */
 function createEmitter(mapping) {
