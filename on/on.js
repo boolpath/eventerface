@@ -1,12 +1,3 @@
-/* NODE MODULES */
-
-/** LOCAL OBJECT 
- * @property {} - 
- */
-var ON = {
-	
-};
-
 /** MODULE INTERFACE 
  * @method {function} - 
  */
@@ -25,8 +16,10 @@ function bind(emitter, map) {
 	if (typeof emitter.on !== 'function') {
         return false;
     }
+    // Save a reference to the emitter's #on method
     emitter.ownOn = emitter.on;
 
+    // Expose a new #on method that subscribes the events to the specified map
     emitter.on = function (eventName, message) {
         map.on(eventName, message, emitter); 
         emitter.ownOn.apply(emitter, [].slice.apply(arguments));

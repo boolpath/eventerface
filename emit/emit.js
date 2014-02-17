@@ -1,12 +1,3 @@
-/* NODE MODULES */
-
-/** LOCAL OBJECT 
- * @property {} - 
- */
-var EMIT = {
-	
-};
-
 /** MODULE INTERFACE 
  * @method {function} - 
  */
@@ -25,8 +16,10 @@ function bind(emitter, map) {
     if (typeof emitter.emit !== 'function') {
         return false;
     }
+    // Save a reference to the emitter's #emit method
     emitter.ownEmit = emitter.emit;
 
+    // Expose a new #emit method that routes the events to the specified map
     emitter.emit = function (eventName, message) { 
         map.emit(eventName, message, emitter); 
     }
