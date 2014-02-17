@@ -4,6 +4,8 @@ var tcpEventify = require('tcp-eventify'),
     fs = require('fs'),
     basepath = __dirname + '/../../sockets/';
 
+/*----------------------------------------------------------------------------*/
+
 /** Creates a simple global mapper that routes every event to its listeners using unix sockets
  * @param {string} name - The name of the map
  * @returns {object} map - The global map created
@@ -11,7 +13,7 @@ var tcpEventify = require('tcp-eventify'),
 module.exports = function (name) {
     var map = {
         name: name || 'globalNamespace',
-        sockets: [],
+        sockets: [],    // A set of the connected sockets
         events: {},     // A set of the emitted events
         trees: {}       // A set of arrays of listeners of events
     };
@@ -47,6 +49,7 @@ module.exports = function (name) {
             // If there are any registered listeners to this particular event:
             var listeningSockets = map.trees[eventName];
             if (listeningSockets) {
+                // Send the event to all its listeners
                 listeningSockets.forEach(function (listener) {
                     if (typeof listener === 'object' && listener !== socket &&
                         typeof listener.send === 'function') {
@@ -56,18 +59,8 @@ module.exports = function (name) {
             }
         });
     }).listen(path, function () {
-        console.log('Unix socket created: ' + name + '.sock');
+        // console.log('Unix socket created: ' + name + '.sock');
     });
-
-    // Map emitted events to all listeners by emitting the event on each of them
-    map.emit = function () {
-        
-    };
-
-    // Register a listener to a particular event
-    map.on = function () {
-        
-    };
 
     return map;
 }
