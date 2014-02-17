@@ -18,10 +18,13 @@ var FIND = {
 };
 
 /** MODULE INTERFACE
- *@method {function} globalNamespace - Looks for an existing global namespace
+ *@method {object} global - Contains methods for finding existing global namespaces and channels
+ *@method {object} distributed - Contains methods for finding existing distributed channels, stations and APIs
  */
 module.exports = {
-    globalNamespace: globalNamespace,
+    global: {
+        namespace: globalNamespace
+    },
     distributed: {
         channel: distributedChannel
     }
@@ -38,12 +41,11 @@ function globalNamespace(name, found) {
     connectToUnixSocket(name, found);
 }
 
-/** Connects to a unix-socket-based namespace
- * @param {string} name - The name of the namespace
- * @returns {function} found - A function to be called when the namespace is found
+/** Establishes a connection to a unix-socket server
+ * @param {string} name - The name of the target socket (i.e. name.sock)
+ * @param {function} found - A function to invoke when the connection is established
  * @param {number} maxAttempts - The max number of connection attempts to be done
  * @param {number} retryTimeout - The delay between unsuccessful connection attempts
- * @returns
  */
 function connectToUnixSocket(name, found, maxAttempts, retryTimeout) {
     var numAttempts = maxAttempts || FIND.retry.attempts,
@@ -56,7 +58,7 @@ function connectToUnixSocket(name, found, maxAttempts, retryTimeout) {
         socket = net.connect(FIND.basepath + name + '.sock', function () {
             var eventedSocket = tcpEventify(socket);
             // Expose the socket methods through the 'emit' and 'on' methods
-            // of the namespace object to be returned
+            // of the interface object that will be returned
             var emitter = {
                 emit: function (eventName, message) {
                     eventedSocket.send(eventName, message);
@@ -69,6 +71,7 @@ function connectToUnixSocket(name, found, maxAttempts, retryTimeout) {
             // Return the found namespace object by invoking the callback
             found(emitter);
         });
+        // Handle connection errors
         socket.on('error', function (err) {
             // Retry on unsuccessful connection attempts
             if (err.errno === 'ECONNREFUSED') {
@@ -76,22 +79,28 @@ function connectToUnixSocket(name, found, maxAttempts, retryTimeout) {
                     setTimeout(function () {
                         connect();
                     }, timeout);
+                } else {
+                    console.log('Could not connect to unix socket ' + name + '.sock');
                 }
             }
         });
     })();
 }
 
-/**
- *
+/** Looks for an existing distributed channel on a remote server
+ * @param {options} - Information needed to find the distributed channel
+ * @param {function} found - A callback to invoke when the channel is found
  */
 function distributedChannel(options, found) {
     // console.log('Searching distributed channel on port', options.port);
     connectToTcpSocket(options, found);
 }
 
-/**
- *
+/** Establishes a connnection to a TCP socket server
+ * @param {options} - Information like host and port of the channel's server
+ * @returns {function} found - A function to be called when the namespace is found
+ * @param {number} maxAttempts - The max number of connection attempts to be done
+ * @param {number} retryTimeout - The delay between unsuccessful connection attempts
  */
 function connectToTcpSocket(options, found, maxAttempts, retryTimeout) {
     var numAttempts = maxAttempts || FIND.retry.attempts,
@@ -99,10 +108,12 @@ function connectToTcpSocket(options, found, maxAttempts, retryTimeout) {
         attempts = 0,
         socket;
 
-    // Try to connect to the tcp socket server
+    // Try to connect to the TCP socket server
     (function connect() {
         socket = net.connect(options, function () {
             var eventedSocket = tcpEventify(socket);
+            // Expose the socket methods through the 'emit' and 'on' methods
+            // of the interface object that will be returned
             var emitter = {
                 emit: function (eventName, message) {
                     eventedSocket.send(eventName, message);
@@ -114,6 +125,7 @@ function connectToTcpSocket(options, found, maxAttempts, retryTimeout) {
             emitter.send = emitter.emit;
             found(emitter);
         });
+        // Handle connection errors
         socket.on('error', function (err) {
             // Retry on unsuccessful connection attempts
             if (err.errno === 'ECONNREFUSED') {
@@ -121,6 +133,8 @@ function connectToTcpSocket(options, found, maxAttempts, retryTimeout) {
                     setTimeout(function () {
                         connect();
                     }, timeout);
+                } else {
+                    console.log('Could not connect to', (options.host || '') + ':' + options.port);
                 }
             }
         });

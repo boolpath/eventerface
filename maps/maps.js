@@ -74,13 +74,13 @@ function find(options, onFound) {
         scope = options.scope;
 
     if (scope === 'global') {
-        if (type === 'namespace') {
-            MAPS.find.globalNamespace(options.name, onFound);
+        if (type === 'namespace') {     // #find('app'): global namespace 'app'
+            MAPS.find.global.namespace(options.name, onFound);
         } else if (type === 'channel') {
 
         }
     } else if (scope === 'distributed') {
-        if (type === 'channel') {
+        if (type === 'channel') {       // #find('channel://host:port')
             MAPS.find.distributed.channel(options, onFound);
         } else if (type === 'station') {
 

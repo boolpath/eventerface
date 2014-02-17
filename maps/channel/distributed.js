@@ -4,6 +4,8 @@ var net = require('net'),
     tcpEventify = require('tcp-eventify'),
     find = require('../find.js');
 
+/*----------------------------------------------------------------------------*/
+
 /** Creates a point to point mapper that routes every event to the other side of the channel
  * @param {string} port - The port where the local side of the channel will be created
  * @returns {object} map - The created mapping object
