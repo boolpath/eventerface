@@ -3,7 +3,9 @@ var net = require('net'),
     fs = require('fs');
 
 /** LOCAL OBJECT 
- * @property {} - 
+ * @property {local} - The module in charge of creating local namespaces
+ * @property {global} - The module in charge of creating global namespaces and channels
+ * @property {distributed} - The module in charge of creating distributed channels, stations and APIs
  */
 var MAPS = {
     local: [],
@@ -22,7 +24,8 @@ var MAPS = {
 };
 
 /** MODULE INTERFACE
- *@method {function} - 
+ *@method {function} create - Creates a mapping object for a local, global or distributed evented interface
+ *@method {function} find - Finds an existing evented interface, either locally or remotely
  */
 module.exports = {
     create: create,
@@ -31,27 +34,26 @@ module.exports = {
 
 /*----------------------------------------------------------------------------*/
 
-/** Creates a new object for mapping multiple events to multiple listeners
- * @param {object} options - Describes the mapping to be done
- * @returns {object} map - The created map
+/** Creates a mapping object for a local, global or distributed evented interface
+ * @param {object} options - Describes the type and scope of the mapping to be done
  */
 function create(options) {
-    var type = options.type,
-        scope = options.scope,
-        map;
+    var type = options.type,    // namespace, channel, station, api
+        scope = options.scope,  // local, global or distributed
+        map = {};
 
-    if (scope === 'local') {
+    if (scope === 'local') {        // (same file)
         if (type === 'namespace') { // #create(): local namespace
             map = MAPS.create.local.namespace();
         }
-    } else if (scope === 'global') {
-        if (type === 'namespace') { // #create('app'): global namespace 'app'
+    } else if (scope === 'global') {    // (same file system)
+        if (type === 'namespace') {     // #create('app'): global namespace 'app'
             map = MAPS.create.global.namespace(options.name);
         } else if (type === 'channel') {
 
         }
-    } else if (scope === 'distributed') { // #create('channel://port')
-        if (type === 'channel') {
+    } else if (scope === 'distributed') {   // (different file systems)
+        if (type === 'channel') {           // #create('channel://port')
             map = MAPS.create.distributed.channel(options.port);
         } else if (type === 'station') {
 
@@ -63,19 +65,15 @@ function create(options) {
     return map;
 }
 
-/** Finds the mapping context of an evented interface, either locally or remotely
- * @param {object} options - Information needed to find the interface mapping
- * @returns
+/** Finds an existing evented interface, either locally or remotely
+ * @param {object} options - Information needed to find the evented interface 
+ * @param {function} onFound - A callback to invoke when the evented interface is found
  */
 function find(options, onFound) {
     var type = options.type,
         scope = options.scope;
 
-    if(scope === 'local') {
-        if (type === 'namespace') {
-            
-        }
-    } else if (scope === 'global') {
+    if (scope === 'global') {
         if (type === 'namespace') {
             MAPS.find.globalNamespace(options.name, onFound);
         } else if (type === 'channel') {
