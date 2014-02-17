@@ -1,5 +1,5 @@
 /* NODE MODULES */
-var tcpEventify = require('../../utils/tcpEventify'),
+var tcpEventify = require('tcp-eventify'),
     net = require('net'),
     fs = require('fs'),
     basepath = __dirname + '/../../sockets/';

@@ -1,6 +1,6 @@
 /* NODE MODULES */
 var net = require('net'),
-    tcpEventify = require('../utils/tcpEventify');
+    tcpEventify = require('tcp-eventify');
 
 /** LOCAL OBJECT 
  * @property {string} basepath - The path to look for unix sockets

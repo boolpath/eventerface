@@ -1,7 +1,7 @@
 /* NODE MODULES */
 var net = require('net'),
     EventEmitter = require('events').EventEmitter,
-    tcpEventify = require('../../utils/tcpEventify'),
+    tcpEventify = require('tcp-eventify'),
     find = require('../find.js');
 
 /** Creates a point to point mapper that routes every event to the other side of the channel

@@ -119,7 +119,7 @@ In order to create a distributed channel, a string containing the 'channel://' p
 // database.js
 var eventerface = require('eventerface');
 
-// Create
+// Create a distributed channel on port 'databasePort'
 eventerface.create('channel://databasePort', function (app) {
     // 'app': the channel created by the database to communicate with the application
     app.on('query', function (query) {
@@ -135,7 +135,7 @@ Then, a channel created on another server can be connected to the previous chann
 // app.js
 var eventerface = require('eventerface');
 
-// Create
+// Create a distributed channel on port 'appPort'
 eventerface.create('channel://appPort', function (database) { 
     // 'database': the channel created by the application to communicate with the database
     database.connect('databaseHost:databasePort', function () {
