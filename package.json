@@ -1,7 +1,15 @@
 {
     "name": "eventerface",
+    "description": "Evented API development framework for distributed, loosely coupled architectures.",
+    "homepage": "https://github.com/jorgezaccaro/eventerface",
+    "author": {
+        "name": "Jorge Zaccaro",
+        "email": "jorgezaccaro@gmail.com",
+        "url": "https://github.com/jorgezaccaro"
+    },
     "version": "0.0.1",
-    "description": "Create distributed, loosely coupled architectures by managing everything through event-based interfaces.",
-    "main": "eventerface.js",
-    "depedencies": {}
+    "license": "MIT",
+    "depedencies": {},
+    "keywords": ["events", "evented", "api", "loosely", "coupled"],
+    "main": "eventerface.js"
 }
