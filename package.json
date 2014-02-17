@@ -1,7 +1,7 @@
 {
     "name": "eventerface",
     "description": "Evented API development framework for distributed, loosely coupled architectures.",
-    "homepage": "https://github.com/jorgezaccaro/eventerface",
+    "homepage": "https://github.com/jorgezaccaro/eventerface#eventerface",
     "author": {
         "name": "Jorge Zaccaro",
         "email": "jorgezaccaro@gmail.com",
