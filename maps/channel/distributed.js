@@ -9,13 +9,13 @@ var net = require('net'),
  */
 module.exports = function (port) {
     var map = {},
-        channelConnected = false;
+        serverConnected = false,
         emitter = new EventEmitter(),
         serverSocket = {},
         clientSocket = {};
 
     var server = net.createServer(function (socket) {
-        if (!channelConnected) {
+        if (!serverConnected) {
             channelConnected = true;
             var eventedSocket = tcpEventify(socket);
             serverSocket = eventedSocket;
@@ -27,14 +27,21 @@ module.exports = function (port) {
         // console.log('Distributed channel listening on port', port);
     });
 
-    map.connect = function connectChannel(options, onConnect) {
+    map.connect = function connectChannel(target, onConnect) {
+        var parts = target.split(':'),
+        options = {
+            host: parts[0],
+            port: parts[1]
+        };
+
         find.distributed.channel(options, function (socket) {
-            var eventedSocket = tcpEventify(socket);
-            clientSocket = eventedSocket;
-            eventedSocket.on('event', function (event) {
+            clientSocket = socket;
+            socket.on('event', function (event) {
                 emitter.emit(event.name, event.message);
             });
-            onConnect();
+            if (typeof onConnect === 'function') {
+                onConnect();
+            }
         });
     };
     map.emit = function (event, message) {
