@@ -1,5 +1,5 @@
 /** MODULE INTERFACE 
- * @method {function} - 
+ * @method {function} bind - Binds an emitter's #on method to an event mapping context
  */
 module.exports = {
     bind: bind
@@ -7,9 +7,9 @@ module.exports = {
 
 /*----------------------------------------------------------------------------*/
 
-/** Attaches a custom .on() handler to the emitter
- * @param {object} emitter - The emitter to which a custom .on() handler will be attached
- * @param {string} map - The namespace where the event mapping is to be done
+/** Binds an emitter's #on method to an event mapping context
+ * @param {object} emitter - The emitter whose #on method wil be bound
+ * @param {string} map - The mapping context to which the #on method wil be bound
  * @returns {boolean} - True if the handler could be attached
  */
 function bind(emitter, map) {
