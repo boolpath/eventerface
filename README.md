@@ -154,7 +154,7 @@ Eventerface can also be used to expose collections of event-related resources th
 
 # Examples
 
-(See exampes folder)  
+(See examples folder and examples.md file)  
 
 # License
 MIT
