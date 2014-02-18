@@ -150,9 +150,11 @@ In this usage example, the database.js file on host 'databaseHost' creates a dis
 #### - Distributed Stations
 
 # Eventful APIs
-Eventerface can also be used to expose collections of event related resources through RESTlike Web APIs.
+Eventerface can also be used to expose collections of event-related resources through RESTlike Web APIs (coming soon...).
 
 # Examples
+
+(See exampes folder)  
 
 # License
 MIT
